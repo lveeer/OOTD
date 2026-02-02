@@ -1,6 +1,7 @@
 /// Mock 数据完整集合
 /// 包含所有 API 接口的模拟响应数据
 
+import 'package:flutter/material.dart';
 import '../mock/mock_config.dart';
 import '../../shared/models/user.dart';
 import '../../shared/models/product.dart';

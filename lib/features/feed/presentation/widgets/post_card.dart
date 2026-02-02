@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/di/injection_container.dart' as di;
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/post_entity.dart';
+import '../../../post_detail/presentation/blocs/post_detail_bloc.dart';
+import '../../../post_detail/presentation/pages/post_detail_page.dart';
 
 /// 极简白灰风格帖子卡片
 /// 4-8px 圆角，无边框，扁平设计
@@ -33,6 +37,24 @@ class PostCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return BlocProvider(
+                  create: (_) => PostDetailBloc(
+                    getPostDetail: di.getIt(),
+                    likePost: di.getIt(),
+                    unlikePost: di.getIt(),
+                    collectPost: di.getIt(),
+                    uncollectPost: di.getIt(),
+                    followUser: di.getIt(),
+                    unfollowUser: di.getIt(),
+                  ),
+                  child: PostDetailPage(postId: post.id),
+                );
+              },
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(AppConstants.radiusM),
         splashColor: labelColor.withOpacity(0.05),

@@ -74,4 +74,21 @@ class User extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nickname': nickname,
+      'avatar': avatar,
+      'bio': bio,
+      'phone': phone,
+      'email': email,
+      'followersCount': followersCount,
+      'followingCount': followingCount,
+      'postsCount': postsCount,
+      'isVerified': isVerified,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+    };
+  }
 }

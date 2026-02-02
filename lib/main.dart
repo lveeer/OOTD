@@ -10,11 +10,37 @@ import 'features/feed/presentation/blocs/feed_bloc.dart';
 import 'features/feed/presentation/pages/feed_page.dart';
 import 'features/post_editor/presentation/blocs/post_editor_bloc.dart';
 import 'features/post_editor/presentation/pages/post_editor_page.dart';
+import 'features/post_detail/data/datasources/post_detail_local_datasource.dart';
+import 'features/post_detail/data/repositories/post_detail_repository_impl.dart';
+import 'features/post_detail/domain/repositories/post_detail_repository.dart';
+import 'features/post_detail/domain/usecases/get_post_detail.dart';
+import 'features/post_detail/domain/usecases/like_post.dart';
+import 'features/post_detail/domain/usecases/unlike_post.dart';
+import 'features/post_detail/domain/usecases/collect_post.dart';
+import 'features/post_detail/domain/usecases/uncollect_post.dart';
+import 'features/post_detail/domain/usecases/follow_user.dart';
+import 'features/post_detail/domain/usecases/unfollow_user.dart';
+import 'features/post_detail/presentation/blocs/post_detail_bloc.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.configureDependencies();
+  
+  // 注册PostDetail相关依赖
+  final postDetailLocalDataSource = PostDetailLocalDataSource();
+  final postDetailRepository = PostDetailRepositoryImpl(
+    localDataSource: postDetailLocalDataSource,
+  );
+  di.getIt.registerSingleton<PostDetailRepository>(postDetailRepository);
+  di.getIt.registerFactory<GetPostDetail>(() => GetPostDetail(di.getIt()));
+  di.getIt.registerFactory<LikePost>(() => LikePost(di.getIt()));
+  di.getIt.registerFactory<UnlikePost>(() => UnlikePost(di.getIt()));
+  di.getIt.registerFactory<CollectPost>(() => CollectPost(di.getIt()));
+  di.getIt.registerFactory<UncollectPost>(() => UncollectPost(di.getIt()));
+  di.getIt.registerFactory<FollowUser>(() => FollowUser(di.getIt()));
+  di.getIt.registerFactory<UnfollowUser>(() => UnfollowUser(di.getIt()));
+  
   runApp(const OOTDApp());
 }
 
