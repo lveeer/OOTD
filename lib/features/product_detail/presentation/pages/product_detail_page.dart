@@ -160,9 +160,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       margin: const EdgeInsets.all(AppConstants.spacingL),
       padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
         borderRadius: BorderRadius.circular(AppConstants.radiusL),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: AppColors.cardShadow(Theme.of(context).brightness),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +217,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),

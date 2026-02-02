@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/date_utils.dart';
 import '../../../../shared/widgets/empty_widget.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../blocs/feed_bloc.dart';
@@ -102,9 +99,9 @@ class _FeedPageState extends State<FeedPage> {
                 child: MasonryGridView.count(
                   controller: _scrollController,
                   crossAxisCount: 2,
-                  mainAxisSpacing: AppConstants.spacingS,
-                  crossAxisSpacing: AppConstants.spacingS,
-                  padding: const EdgeInsets.all(AppConstants.spacingS),
+                  mainAxisSpacing: AppConstants.spacingXS,
+                  crossAxisSpacing: AppConstants.spacingXS,
+                  padding: const EdgeInsets.all(AppConstants.spacingXS),
                   itemCount: posts.length + (isLoadingMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index < posts.length) {

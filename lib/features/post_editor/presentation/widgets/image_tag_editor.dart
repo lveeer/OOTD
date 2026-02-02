@@ -229,7 +229,7 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
                 color: AppColors.primary,
                 width: 2,
               ),
-              boxShadow: AppColors.cardShadow,
+              boxShadow: AppColors.cardShadow(Theme.of(context).brightness),
             ),
             child: Icon(
               PhosphorIcons.tag(),
@@ -248,11 +248,11 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
     return Container(
       height: 300,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(AppConstants.radiusL),
         ),
-        boxShadow: AppColors.elevatedShadow,
+        boxShadow: AppColors.elevatedShadow(Theme.of(context).brightness),
       ),
       child: Column(
         children: [

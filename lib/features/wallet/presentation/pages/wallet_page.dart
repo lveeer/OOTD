@@ -37,7 +37,7 @@ class _WalletPageState extends State<WalletPage> {
       decoration: BoxDecoration(
         gradient: AppColors.primaryGradient,
         borderRadius: BorderRadius.circular(AppConstants.radiusL),
-        boxShadow: AppColors.elevatedShadow,
+        boxShadow: AppColors.elevatedShadow(Theme.of(context).brightness),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,9 +120,9 @@ class _WalletPageState extends State<WalletPage> {
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
       padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
         borderRadius: BorderRadius.circular(AppConstants.radiusL),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: AppColors.cardShadow(Theme.of(context).brightness),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

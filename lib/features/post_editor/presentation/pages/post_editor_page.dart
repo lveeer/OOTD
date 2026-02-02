@@ -343,7 +343,7 @@ class _PostEditorPageState extends State<PostEditorPage> {
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
