@@ -10,6 +10,9 @@ import '../widgets/topic_card.dart';
 import '../widgets/user_card.dart';
 import '../widgets/trending_post_card.dart';
 import '../../../user_profile/presentation/pages/user_detail_page.dart';
+import '../../../post_detail/presentation/pages/post_detail_page.dart';
+import '../../../post_detail/presentation/blocs/post_detail_bloc.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
@@ -298,7 +301,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
             topic: topic,
             isFollowed: isFollowed,
             onTap: () {
-              // TODO: 跳转到话题详情页
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => _TopicDetailPage(
+                    topicName: topic.name,
+                    topicId: topic.id,
+                  ),
+                ),
+              );
             },
             onFollowToggle: () {
               context
@@ -382,11 +392,89 @@ class _DiscoverPageState extends State<DiscoverPage> {
             child: TrendingPostCard(
               post: post,
               onTap: () {
-                // TODO: 跳转到帖子详情页
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => PostDetailBloc(
+                        getPostDetail: di.getIt(),
+                        likePost: di.getIt(),
+                        unlikePost: di.getIt(),
+                        collectPost: di.getIt(),
+                        uncollectPost: di.getIt(),
+                        followUser: di.getIt(),
+                        unfollowUser: di.getIt(),
+                      ),
+                      child: PostDetailPage(
+                        postId: post.id,
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// 话题详情页（占位实现）
+class _TopicDetailPage extends StatelessWidget {
+  final String topicName;
+  final String topicId;
+
+  const _TopicDetailPage({
+    required this.topicName,
+    required this.topicId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    final labelColor = AppColors.labelColor(brightness);
+    final secondaryLabelColor = AppColors.secondaryLabelColor(brightness);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(topicName),
+        leading: IconButton(
+          icon: Icon(
+            PhosphorIcons.arrowLeft(),
+            color: labelColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              PhosphorIcons.hash(),
+              size: 64,
+              color: secondaryLabelColor,
+            ),
+            const SizedBox(height: AppConstants.spacingL),
+            Text(
+              topicName,
+              style: TextStyle(
+                fontSize: AppConstants.fontSizeXL,
+                fontWeight: FontWeight.w600,
+                color: labelColor,
+              ),
+            ),
+            const SizedBox(height: AppConstants.spacingS),
+            Text(
+              '话题详情页功能开发中',
+              style: TextStyle(
+                fontSize: AppConstants.fontSizeM,
+                color: secondaryLabelColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
