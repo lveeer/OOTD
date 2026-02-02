@@ -122,11 +122,6 @@ class _FeedPageState extends State<FeedPage> {
           return const SizedBox.shrink();
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
-        child: Icon(PhosphorIcons.plus()),
-      ),
     );
   }
 }
