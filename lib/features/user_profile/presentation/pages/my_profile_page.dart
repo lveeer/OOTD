@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/models/user.dart';
+import '../../../wallet/presentation/pages/wallet_page.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
@@ -43,6 +44,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
           ),
           SliverToBoxAdapter(
             child: _buildActionButtons(),
+          ),
+          SliverToBoxAdapter(
+            child: _buildWalletCard(),
           ),
           SliverToBoxAdapter(
             child: _buildTabs(),
@@ -165,6 +169,86 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
+  Widget _buildWalletCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingL,
+        vertical: AppConstants.spacingM,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const WalletPage(),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(AppConstants.spacingL),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.accent,
+                AppColors.accent.withOpacity(0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(AppConstants.radiusL),
+            boxShadow: AppColors.cardShadow(Theme.of(context).brightness),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusM),
+                ),
+                child: Icon(
+                  PhosphorIcons.wallet(),
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: AppConstants.spacingM),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '我的钱包',
+                      style: const TextStyle(
+                        fontSize: AppConstants.fontSizeM,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '可提现 ¥1,234.56',
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeS,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                PhosphorIcons.caretRight(),
+                color: Colors.white.withOpacity(0.8),
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildStatItem(String value, String label) {
     return Column(
       children: [
@@ -189,7 +273,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget _buildBio() {
     return Padding(
-      padding: const EdgeInsets.all(AppConstants.spacingL),
+      padding: const EdgeInsets.fromLTRB(
+        AppConstants.spacingL,
+        AppConstants.spacingM,
+        AppConstants.spacingL,
+        AppConstants.spacingL,
+      ),
       child: Text(
         _currentUser.bio ?? '',
         style: TextStyle(
@@ -213,6 +302,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
               },
               icon: Icon(PhosphorIcons.pencilSimple()),
               label: const Text('编辑资料'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
             ),
           ),
           const SizedBox(width: AppConstants.spacingM),
@@ -223,6 +315,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
               },
               icon: Icon(PhosphorIcons.shareNetwork()),
               label: const Text('分享'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
             ),
           ),
         ],
