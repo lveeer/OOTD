@@ -7,7 +7,7 @@ part 'post_editor_event.dart';
 part 'post_editor_state.dart';
 
 class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
-  PostEditorBloc() : super(PostEditorInitial()) {
+  PostEditorBloc() : super(const PostEditorLoaded()) {
     on<AddImages>(_onAddImages);
     on<RemoveImage>(_onRemoveImage);
     on<AddTag>(_onAddTag);
@@ -15,7 +15,6 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
     on<UpdateTag>(_onUpdateTag);
     on<SelectTag>(_onSelectTag);
     on<UpdateContent>(_onUpdateContent);
-    on<ChangeStep>(_onChangeStep);
     on<SaveDraft>(_onSaveDraft);
     on<PublishPost>(_onPublishPost);
     on<ClearError>(_onClearError);
@@ -119,26 +118,6 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
     if (state is PostEditorLoaded) {
       final currentState = state as PostEditorLoaded;
       emit(currentState.copyWith(content: event.content));
-    }
-  }
-
-  Future<void> _onChangeStep(
-    ChangeStep event,
-    Emitter<PostEditorState> emit,
-  ) async {
-    if (state is PostEditorLoaded) {
-      final currentState = state as PostEditorLoaded;
-      if (event.step >= 0 && event.step <= 3) {
-        emit(currentState.copyWith(
-          currentStep: event.step,
-          selectedTagId: null,
-        ));
-      }
-    } else if (state is PostEditorInitial) {
-      // 从初始状态转换到加载状态
-      emit(const PostEditorLoaded(
-        currentStep: 1,
-      ));
     }
   }
 

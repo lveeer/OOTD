@@ -82,7 +82,7 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
       id: '',
       imageIndex: 0,
       relativePosition: Offset.zero,
-      product: Product(
+      product: const Product(
         id: '',
         title: '',
         imageUrl: '',

@@ -70,15 +70,6 @@ class UpdateContent extends PostEditorEvent {
   List<Object?> get props => [content];
 }
 
-class ChangeStep extends PostEditorEvent {
-  final int step;
-
-  const ChangeStep(this.step);
-
-  @override
-  List<Object?> get props => [step];
-}
-
 class SaveDraft extends PostEditorEvent {}
 
 class PublishPost extends PostEditorEvent {}

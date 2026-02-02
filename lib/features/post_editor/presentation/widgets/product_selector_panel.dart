@@ -110,7 +110,7 @@ class _ProductSelectorPanelState extends State<ProductSelectorPanel> {
               color: AppColors.labelColor(Theme.of(context).brightness),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           IconButton(
             icon: Icon(PhosphorIcons.x()),
             onPressed: widget.onClose,
@@ -205,7 +205,7 @@ class _ProductSelectorPanelState extends State<ProductSelectorPanel> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _buildProductGrid(),
         ],
       ),
@@ -241,13 +241,14 @@ class _ProductSelectorPanelState extends State<ProductSelectorPanel> {
         children: [
           Expanded(
             child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.fillColor(Theme.of(context).brightness),
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(AppTheme.cardRadius),
-                              ),
-                            ),child: Center(
-                  child: Icon(
+              decoration: BoxDecoration(
+                color: AppColors.fillColor(Theme.of(context).brightness),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(AppTheme.cardRadius),
+                ),
+              ),
+              child: Center(
+                child: Icon(
                     PhosphorIcons.image(),
                     size: 32,
                     color: AppColors.tertiaryLabelColor(Theme.of(context).brightness),

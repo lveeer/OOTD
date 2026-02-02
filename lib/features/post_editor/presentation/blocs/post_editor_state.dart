@@ -13,7 +13,6 @@ class PostEditorLoaded extends PostEditorState {
   final List<MediaFile> images;
   final List<Tag> tags;
   final String content;
-  final int currentStep;
   final String? selectedTagId;
   final bool isSaving;
   final bool isPublishing;
@@ -25,7 +24,6 @@ class PostEditorLoaded extends PostEditorState {
     this.images = const [],
     this.tags = const [],
     this.content = '',
-    this.currentStep = 0,
     this.selectedTagId,
     this.isSaving = false,
     this.isPublishing = false,
@@ -43,16 +41,11 @@ class PostEditorLoaded extends PostEditorState {
     }
   }
 
-  List<Tag> get currentImageTags {
-    return tags.where((tag) => tag.imageIndex == currentStep - 1).toList();
-  }
-
   @override
   List<Object?> get props => [
         images,
         tags,
         content,
-        currentStep,
         selectedTagId,
         isSaving,
         isPublishing,
@@ -65,7 +58,6 @@ class PostEditorLoaded extends PostEditorState {
     List<MediaFile>? images,
     List<Tag>? tags,
     String? content,
-    int? currentStep,
     String? selectedTagId,
     bool? isSaving,
     bool? isPublishing,
@@ -77,7 +69,6 @@ class PostEditorLoaded extends PostEditorState {
       images: images ?? this.images,
       tags: tags ?? this.tags,
       content: content ?? this.content,
-      currentStep: currentStep ?? this.currentStep,
       selectedTagId: selectedTagId,
       isSaving: isSaving ?? this.isSaving,
       isPublishing: isPublishing ?? this.isPublishing,
