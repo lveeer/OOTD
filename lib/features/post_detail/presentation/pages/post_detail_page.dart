@@ -278,18 +278,24 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   Widget _buildUserInfo(PostDetailLoaded state, bool isDark) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSecondaryBackground : AppColors.lightSecondaryBackground,
+        color: isDark ? AppColors.darkSecondaryBackground : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.darkSeparator : AppColors.lightSeparator,
+            width: 0.5,
+          ),
+        ),
       ),
       child: Row(
         children: [
           // 头像
           CircleAvatar(
-            radius: 24,
+            radius: 20,
             backgroundImage: NetworkImage(state.post.author.avatar ?? ''),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           // 用户信息
           Expanded(
             child: Column(
@@ -300,8 +306,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     Text(
                       state.post.author.nickname,
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeL,
-                        fontWeight: FontWeight.w600,
+                        fontSize: AppConstants.fontSizeM,
+                        fontWeight: FontWeight.w500,
                         color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
                       ),
                     ),
@@ -309,40 +315,54 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       const SizedBox(width: 4),
                       Icon(
                         PhosphorIcons.sealCheck(),
-                        size: 16,
-                        color: isDark ? Colors.blue : Colors.blue,
+                        size: 14,
+                        color: Colors.blue,
                       ),
                     ],
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   '${state.post.author.followersCount} 粉丝 · ${state.post.author.postsCount} 帖子',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeS,
+                    fontSize: AppConstants.fontSizeXS,
                     color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                   ),
                 ),
               ],
             ),
           ),
-          // 关注按钮
-          OutlinedButton(
-            onPressed: () {
-              context.read<PostDetailBloc>().add(const PostDetailFollowToggled());
-            },
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(80, 32),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              side: BorderSide(
-                color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+          // 关注按钮 - 小红书风格白色底色、红色字体、红色边框
+          Container(
+            height: 28,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: const Color(0xFFFF2442), // 小红书品牌红
+                width: 1,
               ),
+              borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(
-              '关注',
-              style: TextStyle(
-                fontSize: AppConstants.fontSizeS,
-                color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  context.read<PostDetailBloc>().add(const PostDetailFollowToggled());
+                },
+                borderRadius: BorderRadius.circular(4),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: Text(
+                      '关注',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFFFF2442), // 小红书品牌红
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -481,43 +501,143 @@ class _PostDetailPageState extends State<PostDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                PhosphorIcons.chatCircle(),
-                size: 20,
-                color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '评论',
-                style: TextStyle(
-                  fontSize: AppConstants.fontSizeL,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+          // 评论标题 - 美化样式
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: isDark
+                          ? [
+                              Colors.purple.withOpacity(0.2),
+                              Colors.blue.withOpacity(0.2),
+                            ]
+                          : [
+                              Colors.purple.withOpacity(0.1),
+                              Colors.blue.withOpacity(0.1),
+                            ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    PhosphorIcons.chatCircle(),
+                    size: 20,
+                    color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                '${state.post.commentsCount}',
-                style: TextStyle(
-                  fontSize: AppConstants.fontSizeS,
-                  color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                const SizedBox(width: 12),
+                Text(
+                  '评论',
+                  style: TextStyle(
+                    fontSize: AppConstants.fontSizeL + 2,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                    letterSpacing: 0.3,
+                  ),
                 ),
-              ),
-            ],
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: isDark
+                          ? [
+                              Colors.purple.withOpacity(0.15),
+                              Colors.blue.withOpacity(0.15),
+                            ]
+                          : [
+                              Colors.purple.withOpacity(0.08),
+                              Colors.blue.withOpacity(0.08),
+                            ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.black.withOpacity(0.04),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    '${state.post.commentsCount}',
+                    style: TextStyle(
+                      fontSize: AppConstants.fontSizeS,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           if (state.comments.isEmpty)
             Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 32),
-                child: Text(
-                  '暂无评论，快来抢沙发吧～',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeM,
-                    color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isDark
+                        ? [
+                            AppColors.darkSecondaryBackground.withOpacity(0.5),
+                            AppColors.darkSecondaryBackground.withOpacity(0.3),
+                          ]
+                        : [
+                            AppColors.lightSecondaryBackground.withOpacity(0.5),
+                            AppColors.lightSecondaryBackground.withOpacity(0.3),
+                          ],
                   ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.black.withOpacity(0.04),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.black.withOpacity(0.03),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PhosphorIcons.chatTeardropText(),
+                        size: 32,
+                        color: isDark
+                            ? AppColors.darkTertiaryLabel.withOpacity(0.6)
+                            : AppColors.lightTertiaryLabel.withOpacity(0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '暂无评论',
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeL,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '快来抢沙发吧～',
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeS,
+                        color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -526,10 +646,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: state.comments.length,
-              separatorBuilder: (context, index) => Divider(
-                color: isDark ? AppColors.darkSeparator : AppColors.lightSeparator,
-                height: 1,
-              ),
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final comment = state.comments[index];
                 return _buildCommentItem(comment, isDark);
@@ -542,120 +659,221 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   Widget _buildCommentItem(Map<String, dynamic> comment, bool isDark) {
     final author = comment['author'] as Map<String, dynamic>;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  AppColors.darkSecondaryBackground.withOpacity(0.6),
+                  AppColors.darkSecondaryBackground.withOpacity(0.3),
+                ]
+              : [
+                  AppColors.lightSecondaryBackground.withOpacity(0.6),
+                  Colors.white.withOpacity(0.4),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.05)
+              : Colors.black.withOpacity(0.04),
+          width: 1,
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 头像
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(author['avatar'] ?? ''),
+          // 头像 - 添加边框效果
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.08),
+                width: 2,
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(author['avatar'] ?? ''),
+            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           // 评论内容
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 用户名
-                Text(
-                  author['nickname'] ?? '匿名用户',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeS,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                  ),
+                // 用户名和时间
+                Row(
+                  children: [
+                    Text(
+                      author['nickname'] ?? '匿名用户',
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeS + 1,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.black.withOpacity(0.03),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        _formatTime(comment['createdAt']),
+                        style: TextStyle(
+                          fontSize: AppConstants.fontSizeXS,
+                          color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 // 评论内容
                 Text(
                   comment['content'] ?? '',
                   style: TextStyle(
                     fontSize: AppConstants.fontSizeM,
                     color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                    height: 1.5,
                   ),
                 ),
                 // 回复列表
                 if (comment['replies'] != null &&
                     (comment['replies'] as List).isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: (comment['replies'] as List).map((reply) {
-                        final replyAuthor = reply['author'] as Map<String, dynamic>;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontSize: AppConstants.fontSizeS,
-                                color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: '${replyAuthor['nickname']} ',
-                                  style: const TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                TextSpan(text: reply['content'] ?? ''),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                const SizedBox(height: 8),
-                // 底部操作
-                Row(
-                  children: [
-                    Text(
-                      _formatTime(comment['createdAt']),
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeXS,
-                        color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    GestureDetector(
-                      onTap: () {
-                        // 点赞评论
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            comment['isLiked'] == true
-                                ? PhosphorIcons.heart(PhosphorIconsStyle.fill)
-                                : PhosphorIcons.heart(),
-                            size: 14,
-                            color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${comment['likesCount'] ?? 0}',
-                            style: TextStyle(
-                              fontSize: AppConstants.fontSizeXS,
-                              color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    GestureDetector(
-                      onTap: () {
-                        // 回复评论
-                      },
-                      child: Text(
-                        '回复',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeXS,
-                          color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.03)
+                            : Colors.black.withOpacity(0.02),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.white.withOpacity(0.03)
+                              : Colors.black.withOpacity(0.02),
+                          width: 1,
                         ),
                       ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: (comment['replies'] as List).map((reply) {
+                          final replyAuthor = reply['author'] as Map<String, dynamic>;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 6),
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: AppConstants.fontSizeS,
+                                  color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                                  height: 1.4,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: '${replyAuthor['nickname']} ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                                    ),
+                                  ),
+                                  TextSpan(text: reply['content'] ?? ''),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ],
+                  ),
+                const SizedBox(height: 12),
+                // 底部操作栏
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.03)
+                        : Colors.black.withOpacity(0.02),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 点赞
+                      GestureDetector(
+                        onTap: () {
+                          // 点赞评论
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              comment['isLiked'] == true
+                                  ? PhosphorIcons.heart(PhosphorIconsStyle.fill)
+                                  : PhosphorIcons.heart(),
+                              size: 16,
+                              color: comment['isLiked'] == true
+                                  ? Colors.red
+                                  : (isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${comment['likesCount'] ?? 0}',
+                              style: TextStyle(
+                                fontSize: AppConstants.fontSizeXS + 1,
+                                color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        width: 1,
+                        height: 14,
+                        color: isDark
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.black.withOpacity(0.1),
+                      ),
+                      // 回复
+                      GestureDetector(
+                        onTap: () {
+                          // 回复评论
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              PhosphorIcons.arrowUUpLeft(),
+                              size: 16,
+                              color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '回复',
+                              style: TextStyle(
+                                fontSize: AppConstants.fontSizeXS + 1,
+                                color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -668,81 +886,108 @@ class _PostDetailPageState extends State<PostDetailPage> {
   Widget _buildBottomActionBar(PostDetailLoaded state, bool isDark) {
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
+        left: 12,
+        right: 12,
         top: 8,
         bottom: 8 + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSecondaryBackground : AppColors.lightSecondaryBackground,
+        color: isDark ? AppColors.darkSecondaryBackground : Colors.white,
         border: Border(
           top: BorderSide(
             color: isDark ? AppColors.darkSeparator : AppColors.lightSeparator,
+            width: 0.5,
           ),
         ),
       ),
       child: Row(
         children: [
-          // 评论输入框
+          // 评论输入框 - 高度降低为70%
           Expanded(
-            child: TextField(
-              controller: _commentController,
-              decoration: InputDecoration(
-                hintText: '说点什么...',
-                hintStyle: TextStyle(
-                  color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+            child: Container(
+              height: 32, // 原来约46px，现在32px，约为70%
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.darkFill
+                    : const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: TextField(
+                controller: _commentController,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
                 ),
-                filled: true,
-                fillColor: isDark ? AppColors.darkFill : AppColors.lightFill,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
+                decoration: InputDecoration(
+                  hintText: '说点什么...',
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
                 ),
               ),
             ),
           ),
           const SizedBox(width: 12),
           // 点赞按钮
-          IconButton(
-            onPressed: () {
+          _buildActionButton(
+            icon: state.post.isLiked
+                ? PhosphorIcons.heart(PhosphorIconsStyle.fill)
+                : PhosphorIcons.heart(),
+            color: state.post.isLiked ? const Color(0xFFFF2442) : (isDark ? AppColors.darkLabel : AppColors.lightLabel),
+            onTap: () {
               context.read<PostDetailBloc>().add(const PostDetailLikeToggled());
             },
-            icon: Icon(
-              state.post.isLiked
-                  ? PhosphorIcons.heart(PhosphorIconsStyle.fill)
-                  : PhosphorIcons.heart(),
-              color: state.post.isLiked
-                  ? Colors.red
-                  : (isDark ? AppColors.darkLabel : AppColors.lightLabel),
-            ),
+            isDark: isDark,
           ),
           // 收藏按钮
-          IconButton(
-            onPressed: () {
+          _buildActionButton(
+            icon: state.post.isCollected
+                ? PhosphorIcons.star(PhosphorIconsStyle.fill)
+                : PhosphorIcons.star(),
+            color: state.post.isCollected ? const Color(0xFFFFB800) : (isDark ? AppColors.darkLabel : AppColors.lightLabel),
+            onTap: () {
               context.read<PostDetailBloc>().add(const PostDetailCollectToggled());
             },
-            icon: Icon(
-              state.post.isCollected
-                  ? PhosphorIcons.bookmarkSimple(PhosphorIconsStyle.fill)
-                  : PhosphorIcons.bookmarkSimple(),
-              color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-            ),
+            isDark: isDark,
           ),
           // 分享按钮
-          IconButton(
-            onPressed: () {
+          _buildActionButton(
+            icon: PhosphorIcons.shareNetwork(),
+            color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+            onTap: () {
               context.read<PostDetailBloc>().add(const PostDetailShareRequested());
             },
-            icon: Icon(
-              PhosphorIcons.shareNetwork(),
-              color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-            ),
+            isDark: isDark,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32,
+        height: 32,
+        alignment: Alignment.center,
+        child: Icon(
+          icon,
+          size: 22,
+          color: color,
+        ),
       ),
     );
   }
