@@ -76,7 +76,7 @@ class AppTheme {
       ),
       
       // 极简风格卡片（扁平，无阴影）
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -340,7 +340,7 @@ class AppTheme {
       ),
       
       // iOS 风格对话框
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
@@ -445,7 +445,7 @@ class AppTheme {
       ),
       
       // 极简风格卡片（扁平，无阴影）
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -709,7 +709,7 @@ class AppTheme {
       ),
       
       // iOS 风格对话框
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
