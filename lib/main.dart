@@ -10,6 +10,15 @@ import 'features/feed/presentation/blocs/feed_bloc.dart';
 import 'features/feed/presentation/pages/feed_page.dart';
 import 'features/discover/presentation/blocs/discover_bloc.dart';
 import 'features/discover/presentation/pages/discover_page.dart';
+import 'features/message/data/datasources/message_local_datasource.dart';
+import 'features/message/data/repositories/message_repository_impl.dart';
+import 'features/message/domain/repositories/message_repository.dart';
+import 'features/message/domain/usecases/get_conversations.dart';
+import 'features/message/domain/usecases/get_notifications.dart';
+import 'features/message/domain/usecases/mark_as_read.dart';
+import 'features/message/domain/usecases/mark_notification_as_read.dart';
+import 'features/message/presentation/blocs/message_bloc.dart';
+import 'features/message/presentation/pages/message_page.dart';
 import 'features/post_editor/presentation/blocs/post_editor_bloc.dart';
 import 'features/post_editor/presentation/pages/post_editor_page.dart';
 import 'features/post_detail/data/datasources/post_detail_local_datasource.dart';
@@ -42,6 +51,17 @@ void main() async {
   di.getIt.registerFactory<FollowUser>(() => FollowUser(di.getIt()));
   di.getIt.registerFactory<UnfollowUser>(() => UnfollowUser(di.getIt()));
   
+  // 注册Message相关依赖
+  final messageLocalDataSource = MessageLocalDataSourceImpl();
+  final messageRepository = MessageRepositoryImpl(
+    localDataSource: messageLocalDataSource,
+  );
+  di.getIt.registerSingleton<MessageRepository>(messageRepository);
+  di.getIt.registerFactory<GetConversations>(() => GetConversations(di.getIt()));
+  di.getIt.registerFactory<GetNotifications>(() => GetNotifications(di.getIt()));
+  di.getIt.registerFactory<MarkAsRead>(() => MarkAsRead(di.getIt()));
+  di.getIt.registerFactory<MarkNotificationAsRead>(() => MarkNotificationAsRead(di.getIt()));
+  
   runApp(const OOTDApp());
 }
 
@@ -64,6 +84,14 @@ class OOTDApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => DiscoverBloc(),
+        ),
+        BlocProvider(
+          create: (context) => MessageBloc(
+            getConversations: di.getIt(),
+            getNotifications: di.getIt(),
+            markAsRead: di.getIt(),
+            markNotificationAsRead: di.getIt(),
+          ),
         ),
       ],
       child: MaterialApp(
@@ -285,22 +313,6 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class MessagePage extends StatelessWidget {
-  const MessagePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('消息'),
-      ),
-      body: const Center(
-        child: Text('消息页面'),
       ),
     );
   }
