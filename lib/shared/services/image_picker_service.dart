@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -24,7 +25,7 @@ class ImagePickerService {
       );
 
       if (images.length > maxCount) {
-        throw const ValidationException(
+        throw ValidationException(
           message: '最多只能选择${AppConstants.maxImageCount}张图片',
         );
       }
@@ -40,14 +41,15 @@ class ImagePickerService {
         );
 
         final imageBytes = await compressedFile.readAsBytes();
-        final decodedImage = await decodeImageFromList(imageBytes);
+        final decodedImage = await ui.instantiateImageCodec(imageBytes);
+        final frame = await decodedImage.getNextFrame();
 
         mediaFiles.add(MediaFile(
           id: image.name,
           path: compressedFile.path,
           type: MediaType.image,
-          width: decodedImage.width,
-          height: decodedImage.height,
+          width: frame.image.width,
+          height: frame.image.height,
           size: imageBytes.length,
           createdAt: DateTime.now(),
         ));
@@ -56,9 +58,9 @@ class ImagePickerService {
       AppLogger.info('Picked ${mediaFiles.length} images');
       return mediaFiles;
     } catch (e) {
-      AppLogger.error('Failed to pick images', error: e);
+      AppLogger.error('Failed to pick images', tag: 'ImagePicker');
       if (e is ValidationException) rethrow;
-      throw const UnknownException(message: '选择图片失败');
+      throw UnknownException(message: '选择图片失败');
     }
   }
 
@@ -86,20 +88,20 @@ class ImagePickerService {
       );
 
       final imageBytes = await compressedFile.readAsBytes();
-      final decodedImage = await decodeImageFromList(imageBytes);
-
-      return MediaFile(
-        id: image.name,
-        path: compressedFile.path,
-        type: MediaType.image,
-        width: decodedImage.width,
-        height: decodedImage.height,
-        size: imageBytes.length,
-        createdAt: DateTime.now(),
-      );
-    } catch (e) {
-      AppLogger.error('Failed to pick image', error: e);
-      throw const UnknownException(message: '选择图片失败');
+              final codec = await ui.instantiateImageCodec(imageBytes);
+              final frame = await codec.getNextFrame();
+      
+              return MediaFile(
+                id: image.name,
+                path: compressedFile.path,
+                type: MediaType.image,
+                width: frame.image.width,
+                height: frame.image.height,
+                size: imageBytes.length,
+                createdAt: DateTime.now(),
+              );    } catch (e) {
+      AppLogger.error('Failed to pick image', tag: 'ImagePicker');
+      throw UnknownException(message: '选择图片失败');
     }
   }
 
@@ -127,20 +129,20 @@ class ImagePickerService {
       );
 
       final imageBytes = await compressedFile.readAsBytes();
-      final decodedImage = await decodeImageFromList(imageBytes);
-
-      return MediaFile(
-        id: photo.name,
-        path: compressedFile.path,
-        type: MediaType.image,
-        width: decodedImage.width,
-        height: decodedImage.height,
-        size: imageBytes.length,
-        createdAt: DateTime.now(),
-      );
-    } catch (e) {
-      AppLogger.error('Failed to take photo', error: e);
-      throw const UnknownException(message: '拍照失败');
+              final codec = await ui.instantiateImageCodec(imageBytes);
+              final frame = await codec.getNextFrame();
+      
+              return MediaFile(
+                id: photo.name,
+                path: compressedFile.path,
+                type: MediaType.image,
+                width: frame.image.width,
+                height: frame.image.height,
+                size: imageBytes.length,
+                createdAt: DateTime.now(),
+              );    } catch (e) {
+      AppLogger.error('Failed to take photo', tag: 'ImagePicker');
+      throw UnknownException(message: '拍照失败');
     }
   }
 
@@ -161,9 +163,9 @@ class ImagePickerService {
         keepExif: true,
       );
 
-      return compressedFile ?? file;
+      return compressedFile as File? ?? file;
     } catch (e) {
-      AppLogger.warning('Failed to compress image, using original', error: e);
+      AppLogger.warning('Failed to compress image, using original', tag: 'ImagePicker');
       return file;
     }
   }
@@ -174,7 +176,7 @@ class ImagePickerService {
     try {
       final PermissionState permission = await PhotoManager.requestPermissionExtend();
       if (!permission.isAuth) {
-        throw const PermissionDeniedException(message: '请授权访问相册');
+        throw PermissionDeniedException(message: '请授权访问相册');
       }
 
       final List<AssetEntity> assets = await PhotoManager.getAssetListRange(
@@ -188,14 +190,15 @@ class ImagePickerService {
         if (file == null) continue;
 
         final imageBytes = await file.readAsBytes();
-        final decodedImage = await decodeImageFromList(imageBytes);
+        final codec = await ui.instantiateImageCodec(imageBytes);
+        final frame = await codec.getNextFrame();
 
         mediaFiles.add(MediaFile(
           id: asset.id,
           path: file.path,
           type: asset.type == AssetType.image ? MediaType.image : MediaType.video,
-          width: decodedImage.width,
-          height: decodedImage.height,
+          width: frame.image.width,
+          height: frame.image.height,
           size: imageBytes.length,
           createdAt: asset.createDateTime,
         ));
@@ -203,9 +206,9 @@ class ImagePickerService {
 
       return mediaFiles;
     } catch (e) {
-      AppLogger.error('Failed to pick from gallery', error: e);
+      AppLogger.error('Failed to pick from gallery', tag: 'ImagePicker');
       if (e is PermissionDeniedException) rethrow;
-      throw const UnknownException(message: '从相册选择失败');
+      throw UnknownException(message: '从相册选择失败');
     }
   }
 }

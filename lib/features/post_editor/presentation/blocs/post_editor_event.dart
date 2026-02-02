@@ -43,6 +43,24 @@ class RemoveTag extends PostEditorEvent {
   List<Object?> get props => [tagId];
 }
 
+class UpdateTag extends PostEditorEvent {
+  final Tag tag;
+
+  const UpdateTag(this.tag);
+
+  @override
+  List<Object?> get props => [tag];
+}
+
+class SelectTag extends PostEditorEvent {
+  final String? tagId;
+
+  const SelectTag(this.tagId);
+
+  @override
+  List<Object?> get props => [tagId];
+}
+
 class UpdateContent extends PostEditorEvent {
   final String content;
 
@@ -52,6 +70,17 @@ class UpdateContent extends PostEditorEvent {
   List<Object?> get props => [content];
 }
 
+class ChangeStep extends PostEditorEvent {
+  final int step;
+
+  const ChangeStep(this.step);
+
+  @override
+  List<Object?> get props => [step];
+}
+
 class SaveDraft extends PostEditorEvent {}
 
 class PublishPost extends PostEditorEvent {}
+
+class ClearError extends PostEditorEvent {}

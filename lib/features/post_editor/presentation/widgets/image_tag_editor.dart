@@ -5,6 +5,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/models/tag.dart';
 import '../../../../shared/models/product.dart';
 import '../../../../shared/models/media_file.dart';
@@ -12,13 +13,19 @@ import '../../../../shared/models/media_file.dart';
 class ImageTagEditor extends StatefulWidget {
   final List<MediaFile> images;
   final List<Tag> initialTags;
+  final int currentImageIndex;
+  final Tag? selectedTag;
   final Function(List<Tag>) onTagsChanged;
+  final Function(Tag) onTagTap;
 
   const ImageTagEditor({
     super.key,
     required this.images,
     required this.initialTags,
+    required this.currentImageIndex,
+    required this.selectedTag,
     required this.onTagsChanged,
+    required this.onTagTap,
   });
 
   @override
@@ -28,16 +35,36 @@ class ImageTagEditor extends StatefulWidget {
 class _ImageTagEditorState extends State<ImageTagEditor> {
   late PageController _pageController;
   late List<Tag> _tags;
-  late List<Offset> _tagPositions;
   int _currentImageIndex = 0;
   Tag? _selectedTag;
+  Tag? _draggingTag;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: widget.currentImageIndex);
     _tags = List.from(widget.initialTags);
-    _tagPositions = _tags.map((tag) => tag.relativePosition).toList();
+    _currentImageIndex = widget.currentImageIndex;
+    _selectedTag = widget.selectedTag;
+  }
+
+  @override
+  void didUpdateWidget(ImageTagEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentImageIndex != widget.currentImageIndex) {
+      _currentImageIndex = widget.currentImageIndex;
+      _pageController.animateToPage(
+        _currentImageIndex,
+        duration: AppTheme.normalAnimation,
+        curve: Curves.easeInOut,
+      );
+    }
+    if (oldWidget.selectedTag != widget.selectedTag) {
+      _selectedTag = widget.selectedTag;
+    }
+    if (oldWidget.initialTags != widget.initialTags) {
+      _tags = List.from(widget.initialTags);
+    }
   }
 
   @override
@@ -51,6 +78,19 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
       _currentImageIndex = index;
       _selectedTag = null;
     });
+    widget.onTagTap(Tag(
+      id: '',
+      imageIndex: 0,
+      relativePosition: Offset.zero,
+      product: Product(
+        id: '',
+        title: '',
+        imageUrl: '',
+        originalPrice: 0,
+        finalPrice: 0,
+      ),
+      createdAt: DateTime.now(),
+    ));
   }
 
   Offset _calculateRelativePosition(
@@ -114,11 +154,11 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
 
     setState(() {
       _tags.add(newTag);
-      _tagPositions.add(relativePosition);
       _selectedTag = newTag;
     });
 
     widget.onTagsChanged(_tags);
+    widget.onTagTap(newTag);
     HapticFeedback.mediumImpact();
   }
 
@@ -126,13 +166,39 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
     setState(() {
       _selectedTag = tag;
     });
+    widget.onTagTap(tag);
+    HapticFeedback.lightImpact();
   }
 
-  void _deleteTag(Tag tag) {
+  void _onTagPanStart(DragStartDetails details, Tag tag, Size containerSize) {
     setState(() {
-      _tags.remove(tag);
-      _tagPositions.remove(tag.relativePosition);
-      _selectedTag = null;
+      _draggingTag = tag;
+    });
+  }
+
+  void _onTagPanUpdate(DragUpdateDetails details, Tag tag, Size containerSize) {
+    if (_draggingTag == null) return;
+
+    final image = widget.images[_currentImageIndex];
+    final relativePosition = _calculateRelativePosition(
+      details.localPosition,
+      containerSize,
+      image.aspectRatio,
+    );
+
+    final updatedTag = tag.copyWith(relativePosition: relativePosition);
+    final index = _tags.indexWhere((t) => t.id == tag.id);
+    if (index != -1) {
+      setState(() {
+        _tags[index] = updatedTag;
+      });
+      widget.onTagsChanged(_tags);
+    }
+  }
+
+  void _onTagPanEnd(DragEndDetails details) {
+    setState(() {
+      _draggingTag = null;
     });
     widget.onTagsChanged(_tags);
   }
@@ -140,103 +206,140 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
   @override
   Widget build(BuildContext context) {
     if (widget.images.isEmpty) {
-      return const Center(
-        child: Text('请先选择图片'),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              PhosphorIcons.image(),
+              size: 64,
+              color: AppColors.tertiaryLabelColor(Theme.of(context).brightness),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '请先选择图片',
+              style: TextStyle(
+                fontSize: AppConstants.fontSizeM,
+                color: AppColors.secondaryLabelColor(Theme.of(context).brightness),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onLongPressStart: (details) {
-              final box = context.findRenderObject() as RenderBox?;
-              if (box != null) {
-                _onLongPress(details, box.size);
-              }
-            },
-            child: Stack(
-              children: [
-                PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: _onPageChanged,
-                  itemCount: widget.images.length,
-                  itemBuilder: (context, index) {
-                    final image = widget.images[index];
-                    return Center(
-                      child: AspectRatio(
-                        aspectRatio: image.aspectRatio,
-                        child: Image.file(
-                          File(image.path),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ..._buildTags(),
-                Positioned(
-                  bottom: 16,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      widget.images.length,
-                      (index) => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: index == _currentImageIndex
-                              ? AppColors.accent // 黑色
-                              : AppColors.grey400,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final containerSize = Size(constraints.maxWidth, constraints.maxHeight);
+        return Column(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onLongPressStart: (details) {
+                  _onLongPress(details, containerSize);
+                },
+                child: Stack(
+                  children: [
+                    PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: _onPageChanged,
+                      itemCount: widget.images.length,
+                      itemBuilder: (context, index) {
+                        final image = widget.images[index];
+                        return Center(
+                          child: AspectRatio(
+                            aspectRatio: image.aspectRatio,
+                            child: Image.file(
+                              File(image.path),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    ..._buildTags(containerSize),
+                    Positioned(
+                      bottom: 16,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          widget.images.length,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: index == _currentImageIndex ? 20 : 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: index == _currentImageIndex
+                                  ? AppColors.accent
+                                  : AppColors.grey400,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-        if (_selectedTag != null)
-          _buildTagEditorPanel(),
-      ],
+            _buildHint(),
+          ],
+        );
+      },
     );
   }
 
-  List<Widget> _buildTags() {
+  List<Widget> _buildTags(Size containerSize) {
     return _tags
         .where((tag) => tag.imageIndex == _currentImageIndex)
         .map((tag) {
       final position = tag.relativePosition;
+      final image = widget.images[_currentImageIndex];
+      final fittedSize = _applyBoxFit(
+        BoxFit.contain,
+        Size(image.aspectRatio * 100, 100),
+        containerSize,
+      );
+
+      final horizontalPadding = (containerSize.width - fittedSize.width) / 2;
+      final verticalPadding = (containerSize.height - fittedSize.height) / 2;
+
+      final left = horizontalPadding + position.dx * fittedSize.width - 20;
+      final top = verticalPadding + position.dy * fittedSize.height - 20;
+
       return Positioned(
-        left: position.dx * MediaQuery.of(context).size.width - 20,
-        top: position.dy * (MediaQuery.of(context).size.width / 3 * 4) - 20,
+        left: left,
+        top: top,
         child: GestureDetector(
           onTap: () => _onTagTap(tag),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _selectedTag?.id == tag.id
-                  ? AppColors.accent // 黑色
-                  : Colors.white,
-              border: Border.all(
-                color: AppColors.accent, // 黑色
-                width: 2,
+          onPanStart: (details) => _onTagPanStart(details, tag, containerSize),
+          onPanUpdate: (details) => _onTagPanUpdate(details, tag, containerSize),
+          onPanEnd: _onTagPanEnd,
+          child: AnimatedScale(
+            scale: _draggingTag?.id == tag.id ? 1.2 : 1.0,
+            duration: AppTheme.fastAnimation,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _selectedTag?.id == tag.id
+                    ? AppColors.accent
+                    : AppColors.backgroundColor(Theme.of(context).brightness),
+                border: Border.all(
+                  color: AppColors.accent,
+                  width: 2,
+                ),
               ),
-              boxShadow: [], // 移除阴影
-            ),
-            child: Icon(
-              PhosphorIcons.tag(),
-              color: _selectedTag?.id == tag.id
-                  ? Colors.white
-                  : AppColors.accent, // 黑色
-              size: 20,
+              child: Icon(
+                PhosphorIcons.tag(),
+                color: _selectedTag?.id == tag.id
+                    ? Colors.white
+                    : AppColors.accent,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -244,107 +347,26 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
     }).toList();
   }
 
-  Widget _buildTagEditorPanel() {
+  Widget _buildHint() {
     return Container(
-      height: 300,
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppConstants.radiusL),
-        ),
-        boxShadow: AppColors.elevatedShadow(Theme.of(context).brightness),
+        color: AppColors.fillColor(Theme.of(context).brightness),
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(AppConstants.spacingM),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: AppColors.grey200),
-              ),
-            ),
-            child: Row(
-              children: [
-                const Text(
-                  '编辑标签',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeL,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(PhosphorIcons.trash()),
-                  onPressed: () => _deleteTag(_selectedTag!),
-                  color: AppColors.error,
-                ),
-                IconButton(
-                  icon: const Icon(PhosphorIcons.x()),
-                  onPressed: () {
-                    setState(() {
-                      _selectedTag = null;
-                    });
-                  },
-                ),
-              ],
-            ),
+          Icon(
+            PhosphorIcons.handTap(),
+            size: 16,
+            color: AppColors.secondaryLabelColor(Theme.of(context).brightness),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.spacingM),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '商品信息',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeM,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingM),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: '商品名称',
-                      hintText: '输入商品名称',
-                    ),
-                    controller: TextEditingController(
-                      text: _selectedTag?.product.title ?? '',
-                    ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingM),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: '商品链接',
-                      hintText: '输入商品链接',
-                    ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingM),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            labelText: '价格',
-                            hintText: '¥',
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      const SizedBox(width: AppConstants.spacingM),
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            labelText: '佣金',
-                            hintText: '¥',
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+          const SizedBox(width: 6),
+          Text(
+            '长按图片添加标签，拖拽调整位置',
+            style: TextStyle(
+              fontSize: AppConstants.fontSizeS,
+              color: AppColors.secondaryLabelColor(Theme.of(context).brightness),
             ),
           ),
         ],

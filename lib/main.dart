@@ -9,8 +9,8 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/feed/presentation/blocs/feed_bloc.dart';
 import 'features/feed/presentation/pages/feed_page.dart';
 import 'features/post_editor/presentation/blocs/post_editor_bloc.dart';
+import 'features/post_editor/presentation/pages/post_editor_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
-import 'features/wallet/presentation/pages/wallet_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const FeedPage(),
     const DiscoverPage(),
-    const PostEditorPlaceholder(),
+    const PostEditorPage(),
     const MessagePage(),
     const UserProfilePage(),
   ];
@@ -275,32 +275,6 @@ class DiscoverPage extends StatelessWidget {
   }
 }
 
-class PostEditorPlaceholder extends StatelessWidget {
-  const PostEditorPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('发布'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const PostEditorPage(),
-              ),
-            );
-          },
-          child: const Text('开始发布'),
-        ),
-      ),
-    );
-  }
-}
-
 class MessagePage extends StatelessWidget {
   const MessagePage({super.key});
 
@@ -312,34 +286,6 @@ class MessagePage extends StatelessWidget {
       ),
       body: const Center(
         child: Text('消息页面'),
-      ),
-    );
-  }
-}
-
-class PostEditorPage extends StatelessWidget {
-  const PostEditorPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PostEditorBloc(),
-      child: const PostEditorView(),
-    );
-  }
-}
-
-class PostEditorView extends StatelessWidget {
-  const PostEditorView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('发布穿搭'),
-      ),
-      body: const Center(
-        child: Text('发布编辑器'),
       ),
     );
   }

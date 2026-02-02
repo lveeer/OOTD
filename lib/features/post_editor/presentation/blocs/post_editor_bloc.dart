@@ -12,9 +12,13 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
     on<RemoveImage>(_onRemoveImage);
     on<AddTag>(_onAddTag);
     on<RemoveTag>(_onRemoveTag);
+    on<UpdateTag>(_onUpdateTag);
+    on<SelectTag>(_onSelectTag);
     on<UpdateContent>(_onUpdateContent);
+    on<ChangeStep>(_onChangeStep);
     on<SaveDraft>(_onSaveDraft);
     on<PublishPost>(_onPublishPost);
+    on<ClearError>(_onClearError);
   }
 
   Future<void> _onAddImages(
@@ -78,7 +82,33 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
       final currentState = state as PostEditorLoaded;
       final newTags = List<Tag>.from(currentState.tags);
       newTags.removeWhere((tag) => tag.id == event.tagId);
+      emit(currentState.copyWith(
+        tags: newTags,
+        selectedTagId: currentState.selectedTagId == event.tagId ? null : currentState.selectedTagId,
+      ));
+    }
+  }
+
+  Future<void> _onUpdateTag(
+    UpdateTag event,
+    Emitter<PostEditorState> emit,
+  ) async {
+    if (state is PostEditorLoaded) {
+      final currentState = state as PostEditorLoaded;
+      final newTags = currentState.tags.map((tag) {
+        return tag.id == event.tag.id ? event.tag : tag;
+      }).toList();
       emit(currentState.copyWith(tags: newTags));
+    }
+  }
+
+  Future<void> _onSelectTag(
+    SelectTag event,
+    Emitter<PostEditorState> emit,
+  ) async {
+    if (state is PostEditorLoaded) {
+      final currentState = state as PostEditorLoaded;
+      emit(currentState.copyWith(selectedTagId: event.tagId));
     }
   }
 
@@ -89,6 +119,31 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
     if (state is PostEditorLoaded) {
       final currentState = state as PostEditorLoaded;
       emit(currentState.copyWith(content: event.content));
+    }
+  }
+
+  Future<void> _onChangeStep(
+    ChangeStep event,
+    Emitter<PostEditorState> emit,
+  ) async {
+    if (state is PostEditorLoaded) {
+      final currentState = state as PostEditorLoaded;
+      if (event.step >= 0 && event.step <= 2) {
+        emit(currentState.copyWith(
+          currentStep: event.step,
+          selectedTagId: null,
+        ));
+      }
+    }
+  }
+
+  Future<void> _onClearError(
+    ClearError event,
+    Emitter<PostEditorState> emit,
+  ) async {
+    if (state is PostEditorLoaded) {
+      final currentState = state as PostEditorLoaded;
+      emit(currentState.copyWith(error: null));
     }
   }
 
