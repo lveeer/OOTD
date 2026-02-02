@@ -99,7 +99,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (leading != null)
               leading!
             else if (automaticallyImplyLeading && hasBack)
-              _buildBackButton(fgColor),
+              _buildBackButton(context, fgColor),
             // 标题
             Expanded(
               child: titleWidget ??
@@ -116,7 +116,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           textAlign: centerTitle ? TextAlign.center : TextAlign.start,
                         )
-                      : null),
+                      : const SizedBox()),
             ),
             // 右侧操作按钮
             if (actions != null) ...[
@@ -130,7 +130,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildBackButton(Color fgColor) {
+  Widget _buildBackButton(BuildContext context, Color fgColor) {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_rounded, size: 20),
       color: fgColor,
@@ -258,7 +258,7 @@ class GlassTransparentAppBar extends StatelessWidget implements PreferredSizeWid
       elevation: 0,
       leading: leading ??
           (automaticallyImplyLeading && Navigator.of(context).canPop()
-              ? _buildBackButton(fgColor)
+              ? _buildBackButton(context, fgColor)
               : null),
       actions: actions,
       iconTheme: IconThemeData(color: fgColor),
@@ -268,7 +268,7 @@ class GlassTransparentAppBar extends StatelessWidget implements PreferredSizeWid
     );
   }
 
-  Widget _buildBackButton(Color fgColor) {
+  Widget _buildBackButton(BuildContext context, Color fgColor) {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_rounded, size: 20),
       color: fgColor,

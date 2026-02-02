@@ -20,7 +20,6 @@ import 'features/post_detail/domain/usecases/collect_post.dart';
 import 'features/post_detail/domain/usecases/uncollect_post.dart';
 import 'features/post_detail/domain/usecases/follow_user.dart';
 import 'features/post_detail/domain/usecases/unfollow_user.dart';
-import 'features/post_detail/presentation/blocs/post_detail_bloc.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 
 void main() async {

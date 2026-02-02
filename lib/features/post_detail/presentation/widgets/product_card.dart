@@ -79,45 +79,54 @@ class ProductCard extends StatelessWidget {
                   Row(
                     children: [
                       // 券后价
-                      Text(
-                        '¥${product.finalPrice.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black,
-                          fontSize: AppConstants.fontSizeL,
-                          fontWeight: FontWeight.w600,
+                      Flexible(
+                        child: Text(
+                          '¥${product.finalPrice.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black,
+                            fontSize: AppConstants.fontSizeL,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       // 原价
                       if (product.originalPrice > product.finalPrice) ...[
-                        const SizedBox(width: 8),
-                        Text(
-                          '¥${product.originalPrice.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
-                            fontSize: AppConstants.fontSizeS,
-                            decoration: TextDecoration.lineThrough,
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            '¥${product.originalPrice.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                              fontSize: AppConstants.fontSizeS,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
-                      const Spacer(),
+                      const SizedBox(width: 6),
                       // 佣金标签（仅达人自己可见）
                       if (showCommission && product.commission != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? AppColors.darkFill
-                                : AppColors.lightFill,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            '赚¥${product.commission!.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                              fontSize: AppConstants.fontSizeXS,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.darkFill
+                                  : AppColors.lightFill,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              '赚¥${product.commission!.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                                fontSize: AppConstants.fontSizeXS,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -133,25 +142,31 @@ class ProductCard extends StatelessWidget {
                         color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        '已售${_formatSalesCount(product.salesCount)}',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeXS,
-                          color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                      Flexible(
+                        child: Text(
+                          '已售${_formatSalesCount(product.salesCount)}',
+                          style: TextStyle(
+                            fontSize: AppConstants.fontSizeXS,
+                            color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.star,
                         size: 12,
                         color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        product.rating.toStringAsFixed(1),
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeXS,
-                          color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                      Flexible(
+                        child: Text(
+                          product.rating.toStringAsFixed(1),
+                          style: TextStyle(
+                            fontSize: AppConstants.fontSizeXS,
+                            color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

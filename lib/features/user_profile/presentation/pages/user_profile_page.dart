@@ -16,7 +16,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   final User _mockUser = User(
     id: 'user_1',
     nickname: '时尚达人',
-    avatar: 'https://via.placeholder.com/100',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
     bio: '分享穿搭，发现好物',
     followersCount: 1234,
     followingCount: 567,

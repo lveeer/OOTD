@@ -14,7 +14,7 @@ class MockUserData {
   static const userId = 'mock_user_001';
   static const phone = MockConfig.testPhone;
   static const nickname = MockConfig.testNickname;
-  static const avatar = 'https://via.placeholder.com/150';
+  static const avatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150';
   static const bio = '这是一个测试账号';
   static const token = 'mock_jwt_token_1234567890';
   static const refreshToken = 'mock_refresh_token_0987654321';

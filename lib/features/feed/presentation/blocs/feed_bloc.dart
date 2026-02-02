@@ -96,14 +96,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         author: User(
           id: 'user_1',
           nickname: '时尚达人',
-          avatar: 'https://via.placeholder.com/100',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
           createdAt: DateTime.now(),
         ),
         images: [
           MediaFile(
             id: 'img_${index}_0',
-            path: 'https://via.placeholder.com/400x533',
-            url: 'https://via.placeholder.com/400x533',
+            path: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400',
+            url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400',
             type: MediaType.image,
             width: 400,
             height: 533,

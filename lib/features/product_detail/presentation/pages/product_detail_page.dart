@@ -23,10 +23,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('商品详情'),
+        title: Text('商品详情'),
         actions: [
           IconButton(
-            icon: const Icon(PhosphorIcons.shareNetwork()),
+            icon: Icon(PhosphorIcons.shareNetwork()),
             onPressed: () {},
           ),
         ],
@@ -61,7 +61,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           errorWidget: (context, url, error) => Container(
             height: 400,
             color: AppColors.grey100,
-            child: const Icon(PhosphorIcons.image(), size: 80),
+            child: Icon(PhosphorIcons.image(), size: 80),
           ),
         ),
         if (widget.product.discountRate > 0)
@@ -69,7 +69,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             top: 16,
             left: 16,
             child: Container(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 6,
               ),
@@ -103,26 +103,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               fontSize: AppConstants.fontSizeL,
               fontWeight: FontWeight.w600,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: AppConstants.spacingM),
           Row(
             children: [
-              Text(
-                '¥${widget.product.finalPrice.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: AppConstants.fontSizeXXL,
-                  color: AppColors.error,
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Text(
+                  '¥${widget.product.finalPrice.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: AppConstants.fontSizeXXL,
+                    color: AppColors.error,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               if (widget.product.originalPrice > widget.product.finalPrice) ...[
                 const SizedBox(width: AppConstants.spacingM),
-                Text(
-                  '¥${widget.product.originalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: AppConstants.fontSizeM,
-                    color: AppColors.grey500,
-                    decoration: TextDecoration.lineThrough,
+                Flexible(
+                  child: Text(
+                    '¥${widget.product.originalPrice.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: AppConstants.fontSizeM,
+                      color: AppColors.grey500,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -131,7 +138,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           const SizedBox(height: AppConstants.spacingM),
           Row(
             children: [
-              const Icon(PhosphorIcons.star(), color: AppColors.warning, size: 16),
+              Icon(PhosphorIcons.star(), color: AppColors.warning, size: 16),
               const SizedBox(width: 4),
               Text(
                 widget.product.rating.toStringAsFixed(1),
@@ -141,11 +148,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
               const SizedBox(width: AppConstants.spacingM),
-              Text(
-                '已售 ${widget.product.salesCount}',
-                style: TextStyle(
-                  fontSize: AppConstants.fontSizeS,
-                  color: AppColors.grey600,
+              Flexible(
+                child: Text(
+                  '已售 ${widget.product.salesCount}',
+                  style: TextStyle(
+                    fontSize: AppConstants.fontSizeS,
+                    color: AppColors.grey600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

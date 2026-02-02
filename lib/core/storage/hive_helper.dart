@@ -24,7 +24,7 @@ class HiveHelper {
       AppLogger.info('Hive initialized successfully');
     } catch (e) {
       AppLogger.error('Failed to initialize Hive', error: e);
-      throw const CacheException(message: '本地存储初始化失败');
+      throw CacheException(message: '本地存储初始化失败');
     }
   }
 
@@ -36,7 +36,7 @@ class HiveHelper {
       await _cacheBox.clear();
     } catch (e) {
       AppLogger.error('Failed to clear Hive', error: e);
-      throw const CacheException(message: '清除缓存失败');
+      throw CacheException(message: '清除缓存失败');
     }
   }
 
@@ -46,7 +46,7 @@ class HiveHelper {
       await _appBox.put(key, value);
     } catch (e) {
       AppLogger.error('Failed to set app value: $key', error: e);
-      throw const CacheException(message: '保存数据失败');
+      throw CacheException(message: '保存数据失败');
     }
   }
 
@@ -73,7 +73,7 @@ class HiveHelper {
       await _draftsBox.put(key, draft);
     } catch (e) {
       AppLogger.error('Failed to save draft: $key', error: e);
-      throw const CacheException(message: '保存草稿失败');
+      throw CacheException(message: '保存草稿失败');
     }
   }
 
@@ -109,7 +109,7 @@ class HiveHelper {
       await _userBox.put(key, value);
     } catch (e) {
       AppLogger.error('Failed to set user value: $key', error: e);
-      throw const CacheException(message: '保存用户数据失败');
+      throw CacheException(message: '保存用户数据失败');
     }
   }
 

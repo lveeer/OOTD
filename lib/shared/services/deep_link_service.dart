@@ -38,7 +38,7 @@ class DeepLinkService {
       );
     } catch (e) {
       AppLogger.error('Failed to open Taobao', error: e);
-      throw const UnknownException(message: '打开淘宝失败');
+      throw UnknownException(message: '打开淘宝失败');
     }
   }
 
@@ -63,7 +63,7 @@ class DeepLinkService {
       );
     } catch (e) {
       AppLogger.error('Failed to open JD', error: e);
-      throw const UnknownException(message: '打开京东失败');
+      throw UnknownException(message: '打开京东失败');
     }
   }
 
@@ -77,7 +77,7 @@ class DeepLinkService {
       
       final canLaunch = await canLaunchUrl(Uri.parse(url));
       if (!canLaunch) {
-        throw const UnknownException(message: '无法打开链接');
+        throw UnknownException(message: '无法打开链接');
       }
       
       return await launchUrl(
@@ -87,7 +87,7 @@ class DeepLinkService {
     } catch (e) {
       AppLogger.error('Failed to open URL: $url', error: e);
       if (e is UnknownException) rethrow;
-      throw const UnknownException(message: '打开链接失败');
+      throw UnknownException(message: '打开链接失败');
     }
   }
 
