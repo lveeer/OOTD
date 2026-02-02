@@ -18,6 +18,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     id: 'user_1',
     nickname: '时尚达人',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+    background: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800',
     bio: '分享穿搭，发现好物',
     followersCount: 1234,
     followingCount: 567,
@@ -34,7 +35,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         slivers: [
           _buildSliverAppBar(),
           SliverToBoxAdapter(
-            child: _buildUserInfo(),
+            child: _buildUserInfoWithBackground(),
           ),
           SliverToBoxAdapter(
             child: _buildStats(),
@@ -129,7 +130,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ],
           ),
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -151,19 +152,200 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ),
           ],
         ),
+        const SizedBox(height: AppConstants.spacingL),
+      ],
+    );
+  }
+
+  Widget _buildUserInfoWithBackground() {
+    return Stack(
+      children: [
+        // 背景图
+        Container(
+          height: 180,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.accent.withOpacity(0.3),
+                AppColors.accent.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: _currentUser.background != null
+              ? CachedNetworkImage(
+                  imageUrl: _currentUser.background!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 180,
+                )
+              : null,
+        ),
+        // 更换背景图按钮
+        Positioned(
+          top: 8,
+          right: 8,
+          child: GestureDetector(
+            onTap: () {
+              // TODO: 跳转到更换背景图页面
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(AppConstants.radiusM),
+              ),
+              child: Icon(
+                PhosphorIcons.camera(),
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+        // 用户信息（头像和昵称）
+        Column(
+          children: [
+            const SizedBox(height: 80),
+            GestureDetector(
+              onTap: () {
+                // TODO: 跳转到编辑资料页面
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 4,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: CachedNetworkImageProvider(_currentUser.avatar ?? ''),
+                      backgroundColor: AppColors.grey100,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: Icon(
+                        PhosphorIcons.pencilSimple(),
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _currentUser.nickname,
+                  style: const TextStyle(
+                    fontSize: AppConstants.fontSizeXL,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (_currentUser.isVerified)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Icon(
+                      PhosphorIcons.sealCheck(),
+                      color: AppColors.accent,
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+          ],
+        ),
       ],
     );
   }
 
   Widget _buildStats() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingL,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem('${_currentUser.postsCount}', '帖子'),
           _buildStatItem('${_currentUser.followersCount}', '粉丝'),
           _buildStatItem('${_currentUser.followingCount}', '关注'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBackground() {
+    return GestureDetector(
+      onTap: () {
+        // TODO: 跳转到更换背景图页面
+      },
+      child: Stack(
+        children: [
+          Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.accent.withOpacity(0.3),
+                  AppColors.accent.withOpacity(0.1),
+                ],
+              ),
+            ),
+            child: _currentUser.background != null
+                ? CachedNetworkImage(
+                    imageUrl: _currentUser.background!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200,
+                  )
+                : null,
+          ),
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(AppConstants.radiusM),
+              ),
+              child: Icon(
+                PhosphorIcons.camera(),
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -294,29 +476,36 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
+          SizedBox(
+            width: 130,
             child: OutlinedButton.icon(
               onPressed: () {
                 // TODO: 跳转到编辑资料页面
               },
-              icon: Icon(PhosphorIcons.pencilSimple()),
-              label: const Text('编辑资料'),
+              icon: Icon(PhosphorIcons.pencilSimple(), size: 18),
+              label: const Text('编辑资料', style: TextStyle(fontSize: 14)),
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             ),
           ),
           const SizedBox(width: AppConstants.spacingM),
-          Expanded(
+          SizedBox(
+            width: 130,
             child: OutlinedButton.icon(
               onPressed: () {
                 // TODO: 分享个人主页
               },
-              icon: Icon(PhosphorIcons.shareNetwork()),
-              label: const Text('分享'),
+              icon: Icon(PhosphorIcons.shareNetwork(), size: 18),
+              label: const Text('分享', style: TextStyle(fontSize: 14)),
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             ),
           ),

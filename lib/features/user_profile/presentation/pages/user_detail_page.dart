@@ -28,7 +28,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         slivers: [
           _buildSliverAppBar(),
           SliverToBoxAdapter(
-            child: _buildUserInfo(),
+            child: _buildUserInfoWithBackground(),
           ),
           SliverToBoxAdapter(
             child: _buildStats(),
@@ -91,7 +91,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
             backgroundColor: AppColors.grey100,
           ),
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -113,13 +113,96 @@ class _UserDetailPageState extends State<UserDetailPage> {
               ),
           ],
         ),
+        const SizedBox(height: AppConstants.spacingL),
+      ],
+    );
+  }
+
+  Widget _buildUserInfoWithBackground() {
+    return Stack(
+      children: [
+        // 背景图
+        Container(
+          height: 180,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.accent.withOpacity(0.3),
+                AppColors.accent.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: widget.user.background != null
+              ? CachedNetworkImage(
+                  imageUrl: widget.user.background!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 180,
+                )
+              : null,
+        ),
+        // 用户信息（头像和昵称）
+        Column(
+          children: [
+            const SizedBox(height: 80),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                  width: 4,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: CachedNetworkImageProvider(widget.user.avatar ?? ''),
+                backgroundColor: AppColors.grey100,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.user.nickname,
+                  style: const TextStyle(
+                    fontSize: AppConstants.fontSizeXL,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (widget.user.isVerified)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Icon(
+                      PhosphorIcons.sealCheck(),
+                      color: AppColors.accent,
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+          ],
+        ),
       ],
     );
   }
 
   Widget _buildStats() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.spacingL,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -128,6 +211,31 @@ class _UserDetailPageState extends State<UserDetailPage> {
           _buildStatItem('${widget.user.followingCount}', '关注'),
         ],
       ),
+    );
+  }
+
+  Widget _buildBackground() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.accent.withOpacity(0.3),
+            AppColors.accent.withOpacity(0.1),
+          ],
+        ),
+      ),
+      child: widget.user.background != null
+          ? CachedNetworkImage(
+              imageUrl: widget.user.background!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 200,
+            )
+          : null,
     );
   }
 
@@ -171,28 +279,40 @@ class _UserDetailPageState extends State<UserDetailPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
+          SizedBox(
+            width: 104,
             child: ElevatedButton.icon(
               onPressed: _toggleFollow,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _isFollowing ? Colors.grey[300] : AppColors.accent,
                 foregroundColor: _isFollowing ? Colors.black : Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               icon: Icon(
                 _isFollowing ? PhosphorIcons.check() : PhosphorIcons.userPlus(),
+                size: 18,
               ),
-              label: Text(_isFollowing ? '已关注' : '关注'),
+              label: Text(_isFollowing ? '已关注' : '关注', style: const TextStyle(fontSize: 14)),
             ),
           ),
           const SizedBox(width: AppConstants.spacingM),
-          Expanded(
+          SizedBox(
+            width: 104,
             child: OutlinedButton.icon(
               onPressed: () {
                 // TODO: 跳转到私信页面
               },
-              icon: Icon(PhosphorIcons.chatCircle()),
-              label: const Text('私信'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              icon: Icon(PhosphorIcons.chatCircle(), size: 18),
+              label: const Text('私信', style: TextStyle(fontSize: 14)),
             ),
           ),
         ],
