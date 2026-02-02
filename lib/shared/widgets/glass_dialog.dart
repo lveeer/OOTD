@@ -132,11 +132,11 @@ class GlassDialog extends StatelessWidget {
                 child: DefaultTextStyle(
                   style: TextStyle(
                     color: i == actions!.length - 1
-                        ? AppColors.primary
+                        ? AppColors.accent // 黑色
                         : AppColors.labelColor(Theme.of(context).brightness),
                     fontSize: AppConstants.fontSizeL,
                     fontWeight: i == actions!.length - 1
-                        ? FontWeight.w600
+                        ? FontWeight.w500 // Medium
                         : FontWeight.w400,
                     letterSpacing: -0.3,
                   ),
@@ -424,11 +424,11 @@ class GlassActionSheet extends StatelessWidget {
                               color: action.isDestructive
                                   ? AppColors.error
                                   : (action.isDefault
-                                      ? AppColors.primary
+                                      ? AppColors.accent // 黑色
                                       : labelColor),
                               fontSize: AppConstants.fontSizeL,
                               fontWeight:
-                                  action.isDefault ? FontWeight.w600 : FontWeight.w400,
+                                  action.isDefault ? FontWeight.w500 : FontWeight.w400, // Medium
                               letterSpacing: -0.3,
                             ),
                           ),

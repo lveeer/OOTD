@@ -4,8 +4,8 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 
-/// iOS HIG Liquid Glass 应用栏
-/// 使用背景模糊、半透明效果、支持大标题模式
+/// 极简白灰风格应用栏
+/// 扁平设计，无模糊，纯色背景，无阴影
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final Widget? titleWidget;
@@ -28,7 +28,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.leading,
     this.automaticallyImplyLeading = true,
-    this.centerTitle = true,
+    this.centerTitle = false, // 改为 false，标题靠左
     this.largeTitle = false,
     this.bottom,
     this.elevation,
@@ -59,39 +59,24 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Container(
       decoration: BoxDecoration(
+        color: glassColor,
         border: Border(
           bottom: BorderSide(
             color: borderColor,
             width: 0.5,
           ),
         ),
-        boxShadow: elevation != null && elevation! > 0
-            ? (brightness == Brightness.light
-                ? AppColors.lightElevatedShadow
-                : AppColors.darkElevatedShadow)
-            : null,
+        // 移除阴影，保持扁平
+        boxShadow: [],
       ),
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            decoration: BoxDecoration(
-              color: glassColor,
-              gradient: brightness == Brightness.light
-                  ? AppColors.glassGradientLight
-                  : AppColors.glassGradientDark,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // 主应用栏
-                _buildAppBar(context, fgColor),
-                // 底部组件（如 TabBar）
-                if (bottom != null) bottom!,
-              ],
-            ),
-          ),
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 主应用栏
+          _buildAppBar(context, fgColor),
+          // 底部组件（如 TabBar）
+          if (bottom != null) bottom!,
+        ],
       ),
     );
   }
@@ -124,10 +109,10 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                           style: TextStyle(
                             color: fgColor,
                             fontSize: largeTitle
-                                ? AppConstants.fontSizeXXL
-                                : AppConstants.fontSizeL,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: largeTitle ? -0.8 : -0.3,
+                                ? 20 // 一级标题 18-20px
+                                : 18,
+                            fontWeight: FontWeight.w700, // Bold
+                            letterSpacing: -0.5,
                           ),
                           textAlign: centerTitle ? TextAlign.center : TextAlign.start,
                         )

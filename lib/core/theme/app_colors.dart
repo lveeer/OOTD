@@ -1,65 +1,75 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
-/// iOS HIG 风格颜色系统
-/// 支持语义化颜色、深色模式和 Liquid Glass 材质效果
+/// 极简白灰风格颜色系统 (Ver 1.0)
+/// 设计原则：内容至上、克制用色、呼吸感、杂志质感
+/// 色彩严格限制在白、黑、灰三级色阶中
 class AppColors {
-  // ==================== 品牌色 ====================
-  static const Color primary = Color(AppConstants.primaryColorValue);
-  static const Color secondary = Color(AppConstants.secondaryColorValue);
+  // ==================== 极简白灰色阶 ====================
+  // Level 0 背景 - App主背景、卡片背景、弹窗底色
+  static const Color background = Color(0xFFFFFFFF);
   
-  // 强调色（Tint Color）- 用于可交互元素，比品牌色更饱和、偏白
-  static const Color accent = Color(0xFFFF8FB3);
-  static const Color accentSecondary = Color(0xFF6EE7DD);
+  // Level 1 底色 - 信息流背景、功能区分块背景
+  static const Color secondaryBackground = Color(0xFFF5F5F5);
+  
+  // Level 2 文本 - 主标题、正文、重要按钮文字
+  static const Color textPrimary = Color(0xFF333333);
+  
+  // Level 3 文本 - 次要信息（时间、点赞数、作者名）
+  static const Color textSecondary = Color(0xFF999999);
+  
+  // Level 4 线条 - 分割线、卡片边框
+  static const Color divider = Color(0xFFEEEEEE);
+  
+  // 点缀色（慎用）- 主按钮、选中态图标
+  static const Color accent = Color(0xFF000000);
 
-  // ==================== 语义化颜色 - 浅色模式 ====================
-  static const Color lightLabel = Color(0xFF000000);
-  static Color get lightSecondaryLabel => const Color(0xFF3C3C43).withOpacity(0.60);
-  static Color get lightTertiaryLabel => const Color(0xFF3C3C43).withOpacity(0.30);
-  static Color get lightQuaternaryLabel => const Color(0xFF3C3C43).withOpacity(0.18);
+  // ==================== 语义化颜色 - 浅色模式（极简白灰） ====================
+  static const Color lightLabel = Color(0xFF333333);
+  static Color get lightSecondaryLabel => const Color(0xFF999999);
+  static Color get lightTertiaryLabel => const Color(0xFFCCCCCC);
   
-  static const Color lightBackground = Color(0xFFF2F2F7);
-  static const Color lightSecondaryBackground = Color(0xFFFFFFFF);
-  static const Color lightTertiaryBackground = Color(0xFFF2F2F7);
+  static const Color lightBackground = Color(0xFFFFFFFF);
+  static const Color lightSecondaryBackground = Color(0xFFF5F5F5);
+  static const Color lightTertiaryBackground = Color(0xFFFFFFFF);
   
-  static Color get lightFill => const Color(0xFF787880).withOpacity(0.12);
-  static Color get lightSecondaryFill => const Color(0xFF787880).withOpacity(0.08);
-  static Color get lightTertiaryFill => const Color(0xFF767680).withOpacity(0.05);
+  static Color get lightFill => const Color(0xFF333333).withOpacity(0.05);
+  static Color get lightSecondaryFill => const Color(0xFF333333).withOpacity(0.03);
+  static Color get lightTertiaryFill => const Color(0xFF333333).withOpacity(0.02);
   
-  static const Color lightSeparator = Color(0xFFC6C6C8);
-  static const Color lightSeparatorOpaque = Color(0xFF48484A);
+  static const Color lightSeparator = Color(0xFFEEEEEE);
+  static const Color lightSeparatorOpaque = Color(0xFFEEEEEE);
 
-  // ==================== 语义化颜色 - 深色模式 ====================
+  // ==================== 语义化颜色 - 深色模式（极简黑灰） ====================
   static const Color darkLabel = Color(0xFFFFFFFF);
-  static Color get darkSecondaryLabel => const Color(0xFFEBEBF5).withOpacity(0.60);
-  static Color get darkTertiaryLabel => const Color(0xFFEBEBF5).withOpacity(0.30);
-  static Color get darkQuaternaryLabel => const Color(0xFFEBEBF5).withOpacity(0.16);
+  static Color get darkSecondaryLabel => const Color(0xFF999999);
+  static Color get darkTertiaryLabel => const Color(0xFF666666);
   
   static const Color darkBackground = Color(0xFF000000);
-  static const Color darkSecondaryBackground = Color(0xFF1C1C1E);
-  static const Color darkTertiaryBackground = Color(0xFF2C2C2E);
+  static const Color darkSecondaryBackground = Color(0xFF1A1A1A);
+  static const Color darkTertiaryBackground = Color(0xFF000000);
   
-  static Color get darkFill => const Color(0xFF787880).withOpacity(0.22);
-  static Color get darkSecondaryFill => const Color(0xFF787880).withOpacity(0.14);
-  static Color get darkTertiaryFill => const Color(0xFF767680).withOpacity(0.08);
+  static Color get darkFill => const Color(0xFFFFFFFF).withOpacity(0.08);
+  static Color get darkSecondaryFill => const Color(0xFFFFFFFF).withOpacity(0.05);
+  static Color get darkTertiaryFill => const Color(0xFFFFFFFF).withOpacity(0.03);
   
-  static const Color darkSeparator = Color(0xFF38383A);
-  static const Color darkSeparatorOpaque = Color(0xFF636366);
+  static const Color darkSeparator = Color(0xFF333333);
+  static const Color darkSeparatorOpaque = Color(0xFF333333);
 
-  // ==================== 功能色 ====================
-  static const Color error = Color(AppConstants.errorColorValue);
-  static const Color errorLight = Color(0xFFFF453A);
-  static const Color errorDark = Color(0xFFFF453A);
+  // ==================== 功能色（保持低调，仅用于必要场景） ====================
+  static const Color error = Color(0xFF333333); // 错误信息使用深灰而非红色
+  static const Color errorLight = Color(0xFF333333);
+  static const Color errorDark = Color(0xFFCCCCCC);
   
-  static const Color warning = Color(AppConstants.warningColorValue);
-  static const Color warningLight = Color(0xFFFF9F0A);
-  static const Color warningDark = Color(0xFFFF9F0A);
+  static const Color warning = Color(0xFF333333); // 警告信息使用深灰而非橙色
+  static const Color warningLight = Color(0xFF333333);
+  static const Color warningDark = Color(0xFFCCCCCC);
   
-  static const Color success = Color(AppConstants.successColorValue);
-  static const Color successLight = Color(0xFF30D158);
-  static const Color successDark = Color(0xFF30D158);
+  static const Color success = Color(0xFF333333); // 成功信息使用深灰而非绿色
+  static const Color successLight = Color(0xFF333333);
+  static const Color successDark = Color(0xFFCCCCCC);
 
-  // ==================== 中性色 ====================
+  // ==================== 中性色（完整灰阶） ====================
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey50 = Color(0xFFFAFAFA);
@@ -73,114 +83,54 @@ class AppColors {
   static const Color grey800 = Color(0xFF424242);
   static const Color grey900 = Color(0xFF212121);
 
-  // ==================== Liquid Glass 材质颜色 ====================
-  // 半透明玻璃层，用于背景模糊效果
-  static const Color glassLight = Color(0xCCFFFFFF);
-  static const Color glassDark = Color(0xCC1C1C1E);
+  // ==================== 扁平材质颜色（移除玻璃态效果） ====================
+  // 纯色背景，无模糊效果
+  static const Color glassLight = Color(0xFFFFFFFF);
+  static const Color glassDark = Color(0xFF000000);
   
-  // 玻璃边框色
-  static const Color glassBorderLight = Color(0x33FFFFFF);
-  static const Color glassBorderDark = Color(0x33FFFFFF);
+  // 边框色
+  static const Color glassBorderLight = Color(0xFFEEEEEE);
+  static const Color glassBorderDark = Color(0xFF333333);
   
-  // 高光反射效果
-  static const Color glassHighlightLight = Color(0x33FFFFFF);
-  static const Color glassHighlightDark = Color(0x1AFFFFFF);
+  // 高光效果（移除，保持扁平）
+  static const Color glassHighlightLight = Color(0x00000000);
+  static const Color glassHighlightDark = Color(0x00000000);
 
   // ==================== 透明度层 ====================
   static const Color transparent = Color(0x00000000);
   static const Color overlayLight = Color(0x40000000);
   static const Color overlayDark = Color(0x60000000);
 
-  // ==================== 渐变色 ====================
+  // ==================== 渐变色（移除，保持纯色） ====================
+  // 极简风格不使用渐变，所有渐变改为纯色
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primary, secondary],
+    colors: [Color(0xFF000000), Color(0xFF000000)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient darkGradient = LinearGradient(
-    colors: [Color(0xFF1A1A2E), Color(0xFF16213E)],
+    colors: [Color(0xFF000000), Color(0xFF000000)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  // Liquid Glass 渐变效果
-  static LinearGradient glassGradientLight = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      glassHighlightLight,
-      Colors.transparent,
-      glassHighlightLight,
-    ],
-    stops: const [0.0, 0.5, 1.0],
+  // 移除玻璃态渐变，改为纯色
+  static LinearGradient glassGradientLight = const LinearGradient(
+    colors: [Color(0x00000000), Color(0x00000000)],
   );
 
-  static LinearGradient glassGradientDark = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      glassHighlightDark,
-      Colors.transparent,
-      glassHighlightDark,
-    ],
-    stops: const [0.0, 0.5, 1.0],
+  static LinearGradient glassGradientDark = const LinearGradient(
+    colors: [Color(0x00000000), Color(0x00000000)],
   );
 
-  // ==================== iOS 风格阴影 ====================
-  // 轻微阴影，用于普通卡片
-  static List<BoxShadow> get lightCardShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.03),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-          spreadRadius: 0,
-        ),
-      ];
-
-  static List<BoxShadow> get darkCardShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.15),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-          spreadRadius: 0,
-        ),
-      ];
-
-  // 提升阴影，用于浮动元素
-  static List<BoxShadow> get lightElevatedShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.08),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-          spreadRadius: 0,
-        ),
-      ];
-
-  static List<BoxShadow> get darkElevatedShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.25),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-          spreadRadius: 0,
-        ),
-      ];
-
-  // 内阴影，用于凹陷效果
-  static List<BoxShadow> get lightInnerShadow => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          offset: const Offset(0, -1),
-          blurRadius: 0,
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: Colors.white.withOpacity(0.05),
-          offset: const Offset(0, 1),
-          blurRadius: 0,
-          spreadRadius: 0,
-        ),
-      ];
+  // ==================== 极简风格阴影（移除所有阴影） ====================
+  // 扁平设计，不使用阴影
+  static List<BoxShadow> get lightCardShadow => [];
+  static List<BoxShadow> get darkCardShadow => [];
+  static List<BoxShadow> get lightElevatedShadow => [];
+  static List<BoxShadow> get darkElevatedShadow => [];
+  static List<BoxShadow> get lightInnerShadow => [];
 
   // ==================== 根据主题获取颜色 ====================
   /// 根据主题亮度获取语义化颜色

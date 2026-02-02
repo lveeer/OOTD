@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 
-/// iOS HIG 风格底部导航栏项
+/// 极简白灰风格底部导航栏项
 class GlassBottomNavItem {
   final IconData icon;
   final IconData? activeIcon;
@@ -17,8 +17,8 @@ class GlassBottomNavItem {
   });
 }
 
-/// iOS HIG Liquid Glass 底部导航栏
-/// 使用背景模糊、半透明效果、流畅的动画过渡
+/// 极简白灰风格底部导航栏
+/// 扁平设计，无模糊，线性图标，选中变实心黑
 class GlassBottomNavBar extends StatelessWidget {
   final List<GlassBottomNavItem> items;
   final int currentIndex;
@@ -52,35 +52,25 @@ class GlassBottomNavBar extends StatelessWidget {
           ),
         ),
       ),
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: SafeArea(
-            top: false,
-            child: Container(
-              height: 56 + MediaQuery.of(context).padding.bottom,
-              decoration: BoxDecoration(
-                gradient: brightness == Brightness.light
-                    ? AppColors.glassGradientLight
-                    : AppColors.glassGradientDark,
-              ),
-              child: Row(
-                children: items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
-                  final isSelected = index == currentIndex;
+      child: SafeArea(
+        top: false,
+        child: Container(
+          height: 56 + MediaQuery.of(context).padding.bottom,
+          child: Row(
+            children: items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              final isSelected = index == currentIndex;
 
-                  return Expanded(
-                    child: _NavItem(
-                      item: item,
-                      isSelected: isSelected,
-                      onTap: () => _handleTap(index),
-                      enableHapticFeedback: enableHapticFeedback,
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
+              return Expanded(
+                child: _NavItem(
+                  item: item,
+                  isSelected: isSelected,
+                  onTap: () => _handleTap(index),
+                  enableHapticFeedback: enableHapticFeedback,
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -115,8 +105,8 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
-    final selectedColor = AppColors.primary;
-    final unselectedColor = AppColors.tertiaryLabelColor(brightness);
+    final selectedColor = AppColors.labelColor(brightness); // 黑色/白色
+    final unselectedColor = AppColors.tertiaryLabelColor(brightness); // 灰色
 
     return InkWell(
       onTap: onTap,
@@ -126,23 +116,19 @@ class _NavItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 图标
+          // 图标（线性，选中变实心）
           AnimatedContainer(
             duration: AppTheme.normalAnimation,
             curve: Curves.easeInOut,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? selectedColor.withOpacity(0.1)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-            ),
             child: Icon(
               isSelected && item.activeIcon != null
                   ? item.activeIcon!
                   : item.icon,
               size: 24,
               color: isSelected ? selectedColor : unselectedColor,
+              // 线性图标：未选中空心，选中实心
+              fill: isSelected ? 1.0 : 0.0,
             ),
           ),
           // 标签
@@ -151,7 +137,7 @@ class _NavItem extends StatelessWidget {
             curve: Curves.easeInOut,
             style: TextStyle(
               fontSize: AppConstants.fontSizeXS,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
               color: isSelected ? selectedColor : unselectedColor,
               letterSpacing: isSelected ? -0.2 : 0,
             ),
@@ -189,7 +175,7 @@ class GlassFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
-    final bgColor = backgroundColor ?? AppColors.primary;
+    final bgColor = backgroundColor ?? AppColors.accent; // 黑色
     final fgColor = foregroundColor ?? Colors.white;
 
     Widget fab = Container(

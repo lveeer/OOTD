@@ -59,7 +59,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           decoration: BoxDecoration(
-            gradient: AppColors.primaryGradient,
+            color: AppColors.accent, // 黑色背景
           ),
         ),
       ),
@@ -102,7 +102,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   padding: const EdgeInsets.only(left: 4),
                   child: Icon(
                     PhosphorIcons.sealCheck(),
-                    color: AppColors.primary,
+                    color: AppColors.accent, // 黑色
                     size: 20,
                   ),
                 ),

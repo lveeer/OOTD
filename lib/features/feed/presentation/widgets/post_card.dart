@@ -5,6 +5,8 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/post_entity.dart';
 
+/// 极简白灰风格帖子卡片
+/// 4-8px 圆角，无边框，扁平设计
 class PostCard extends StatelessWidget {
   final PostEntity post;
 
@@ -16,16 +18,25 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firstImage = post.images.isNotEmpty ? post.images[0] : null;
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    final labelColor = AppColors.labelColor(brightness);
+    final secondaryLabelColor = AppColors.secondaryLabelColor(brightness);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppConstants.radiusS),
+        color: brightness == Brightness.light 
+            ? AppColors.lightBackground 
+            : AppColors.darkBackground,
+        borderRadius: BorderRadius.circular(AppConstants.radiusM), // 8px 圆角
+        // 移除边框，保持扁平
       ),
       child: InkWell(
         onTap: () {
         },
-        borderRadius: BorderRadius.circular(AppConstants.radiusS),
+        borderRadius: BorderRadius.circular(AppConstants.radiusM),
+        splashColor: labelColor.withOpacity(0.05),
+        highlightColor: labelColor.withOpacity(0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,23 +45,27 @@ class PostCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(AppConstants.radiusS),
+                      top: Radius.circular(AppConstants.radiusM), // 8px 圆角
                     ),
                     child: CachedNetworkImage(
                       imageUrl: firstImage.url ?? '',
                       width: double.infinity,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        color: AppColors.grey100,
+                        color: brightness == Brightness.light 
+                            ? AppColors.grey100 
+                            : AppColors.grey800,
                         height: 200,
                         child: const Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        color: AppColors.grey100,
+                        color: brightness == Brightness.light 
+                            ? AppColors.grey100 
+                            : AppColors.grey800,
                         height: 200,
-                        child: Icon(PhosphorIcons.image()),
+                        child: Icon(PhosphorIcons.image(), color: secondaryLabelColor),
                       ),
                     ),
                   ),
@@ -95,24 +110,27 @@ class PostCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 用户名（灰色，弱化存在感）
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: 12,
+                        radius: 8, // 缩小头像
                         backgroundImage: post.author.avatar != null
                             ? CachedNetworkImageProvider(post.author.avatar!)
                             : null,
+                        backgroundColor: secondaryLabelColor.withOpacity(0.3),
                         child: post.author.avatar == null
-                            ? Icon(PhosphorIcons.user(), size: 12)
+                            ? Icon(PhosphorIcons.user(), size: 10, color: secondaryLabelColor)
                             : null,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           post.author.nickname,
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeS,
-                            fontWeight: FontWeight.w500,
+                          style: TextStyle(
+                            fontSize: 11, // 11-12px
+                            fontWeight: FontWeight.w400, // Regular
+                            color: secondaryLabelColor, // 灰色
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -121,39 +139,52 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
+                  // 穿搭描述（Medium 字重，最多2行）
                   Text(
                     post.content,
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeS,
-                      color: AppColors.grey800,
-                      height: 1.3,
+                    style: TextStyle(
+                      fontSize: 13, // 13px
+                      fontWeight: FontWeight.w500, // Medium
+                      color: labelColor, // #333333
+                      height: 1.4,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
+                  // 点赞和评论（灰色，低调）
                   Row(
                     children: [
                       Icon(
                         PhosphorIcons.heart(),
-                        size: 12,
-                        color: post.isLiked ? AppColors.primary : AppColors.grey500,
+                        size: 11, // 11-12px
+                        color: post.isLiked 
+                            ? AppColors.accent // 黑色
+                            : secondaryLabelColor, // 灰色
+                        fill: post.isLiked ? 1.0 : 0.0, // 选中实心
                       ),
                       const SizedBox(width: 2),
                       Text(
                         '${post.likesCount}',
-                        style: const TextStyle(fontSize: AppConstants.fontSizeXS),
+                        style: TextStyle(
+                          fontSize: 10, // 10px
+                          fontWeight: FontWeight.w500, // Medium
+                          color: secondaryLabelColor, // 灰色
+                        ),
                       ),
                       const SizedBox(width: 10),
                       Icon(
                         PhosphorIcons.chatCircle(),
-                        size: 12,
-                        color: AppColors.grey500,
+                        size: 11,
+                        color: secondaryLabelColor,
                       ),
                       const SizedBox(width: 2),
                       Text(
                         '${post.commentsCount}',
-                        style: const TextStyle(fontSize: AppConstants.fontSizeXS),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: secondaryLabelColor,
+                        ),
                       ),
                     ],
                   ),

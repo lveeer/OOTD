@@ -35,27 +35,27 @@ class AppConstants {
   static const String secureRefreshTokenKey = 'refresh_token';
   static const String securePidKey = 'pid';
 
-  // 主题色
-  static const int primaryColorValue = 0xFFFF6B9D;
-  static const int secondaryColorValue = 0xFF4ECDC4;
-  static const int backgroundColorValue = 0xFFFAFAFA;
-  static const int surfaceColorValue = 0xFFFFFFFF;
-  static const int errorColorValue = 0xFFFF5252;
-  static const int warningColorValue = 0xFFFFB74D;
-  static const int successColorValue = 0xFF4CAF50;
+  // 主题色（极简白灰风格）
+  static const int primaryColorValue = 0xFF000000;   // 黑色作为主色
+  static const int secondaryColorValue = 0xFF333333; // 深灰作为辅助色
+  static const int backgroundColorValue = 0xFFFFFFFF; // 白色背景
+  static const int surfaceColorValue = 0xFFF5F5F5;   // 浅灰底色
+  static const int errorColorValue = 0xFF333333;     // 错误使用深灰
+  static const int warningColorValue = 0xFF333333;   // 警告使用深灰
+  static const int successColorValue = 0xFF333333;   // 成功使用深灰
 
-  // 间距
+  // 间距（极简风格，增加呼吸感）
   static const double spacingXS = 4.0;
   static const double spacingS = 8.0;
   static const double spacingM = 16.0;
-  static const double spacingL = 24.0;
+  static const double spacingL = 24.0;  // 模块间距 20-30px
   static const double spacingXL = 32.0;
 
-  // 圆角
-  static const double radiusS = 4.0;
-  static const double radiusM = 8.0;
-  static const double radiusL = 16.0;
-  static const double radiusXL = 24.0;
+  // 圆角（极简风格，避免过大圆角）
+  static const double radiusS = 4.0;  // 小圆角
+  static const double radiusM = 8.0;  // 中圆角（卡片）
+  static const double radiusL = 4.0;  // 改为 4px，避免游戏感
+  static const double radiusXL = 4.0; // 改为 4px，保持一致
 
   // 字体大小
   static const double fontSizeXS = 10.0;

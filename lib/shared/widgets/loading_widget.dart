@@ -21,7 +21,7 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
-    final primaryColor = color ?? AppColors.primary;
+    final primaryColor = color ?? AppColors.accent; // 黑色
     final textColor = AppColors.secondaryLabelColor(brightness);
 
     return Center(
@@ -232,7 +232,7 @@ class GlassRefreshIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
-    final primaryColor = color ?? AppColors.primary;
+    final primaryColor = color ?? AppColors.accent; // 黑色
     final textColor = AppColors.secondaryLabelColor(brightness);
 
     return Center(

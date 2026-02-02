@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     Icon(
                       PhosphorIcons.tShirt(),
                       size: 80,
-                      color: AppColors.primary,
+                      color: AppColors.accent, // 黑色
                     ),
                     const SizedBox(height: 24),
                     const Text(

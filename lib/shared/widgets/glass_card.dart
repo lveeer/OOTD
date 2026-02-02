@@ -4,8 +4,8 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 
-/// iOS HIG Liquid Glass 卡片组件
-/// 使用背景模糊、半透明效果、微妙的光泽和阴影
+/// 极简白灰风格卡片组件
+/// 扁平设计，无阴影，纯色背景，4-8px 圆角
 class GlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -34,17 +34,12 @@ class GlassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
-    final glassColor = color ?? AppColors.glassColor(brightness);
-    final shadow = elevation != null
-        ? (brightness == Brightness.light
-            ? AppColors.lightElevatedShadow
-            : AppColors.darkElevatedShadow)
-        : AppColors.cardShadow(brightness);
+    final cardColor = color ?? AppColors.glassColor(brightness);
 
     final card = Container(
       margin: margin,
       decoration: BoxDecoration(
-        color: glassColor,
+        color: cardColor,
         borderRadius: BorderRadius.circular(borderRadius),
         border: border ??
             Border.all(
@@ -53,24 +48,11 @@ class GlassCard extends StatelessWidget {
                   : AppColors.glassBorderDark,
               width: 0.5,
             ),
-        boxShadow: shadow,
+        // 移除阴影，保持扁平
+        boxShadow: [],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
-              gradient: brightness == Brightness.light
-                  ? AppColors.glassGradientLight
-                  : AppColors.glassGradientDark,
-            ),
-            padding: padding,
-            child: child,
-          ),
-        ),
-      ),
+      padding: padding,
+      child: child,
     );
 
     if (onTap != null) {
@@ -82,8 +64,8 @@ class GlassCard extends StatelessWidget {
           onTap?.call();
         },
         borderRadius: BorderRadius.circular(borderRadius),
-        splashColor: AppColors.primary.withOpacity(0.1),
-        highlightColor: AppColors.primary.withOpacity(0.05),
+        splashColor: AppColors.lightLabel.withOpacity(0.05), // 使用黑色而非品牌色
+        highlightColor: AppColors.lightLabel.withOpacity(0.02),
         child: card,
       );
     }

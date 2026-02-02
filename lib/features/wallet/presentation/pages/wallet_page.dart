@@ -35,9 +35,9 @@ class _WalletPageState extends State<WalletPage> {
       margin: const EdgeInsets.all(AppConstants.spacingL),
       padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
+        color: AppColors.accent, // 黑色背景
         borderRadius: BorderRadius.circular(AppConstants.radiusL),
-        boxShadow: AppColors.elevatedShadow(Theme.of(context).brightness),
+        boxShadow: [], // 移除阴影
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class _WalletPageState extends State<WalletPage> {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: AppColors.primary,
+                foregroundColor: AppColors.accent, // 黑色文字
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               child: const Text('立即提现'),
@@ -166,12 +166,12 @@ class _WalletPageState extends State<WalletPage> {
                       FlSpot(6, 300),
                     ],
                     isCurved: true,
-                    color: AppColors.primary,
+                    color: AppColors.accent, // 黑色
                     barWidth: 3,
                     dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: AppColors.primary.withOpacity(0.2),
+                      color: AppColors.accent.withOpacity(0.2), // 黑色 20%
                     ),
                   ),
                 ],
@@ -190,7 +190,7 @@ class _WalletPageState extends State<WalletPage> {
         margin: const EdgeInsets.only(left: 8),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.grey100,
+          color: isSelected ? AppColors.accent : AppColors.grey100, // 使用 accent（黑色）
           borderRadius: BorderRadius.circular(AppConstants.radiusS),
         ),
         child: Text(
@@ -198,7 +198,7 @@ class _WalletPageState extends State<WalletPage> {
           style: TextStyle(
             fontSize: AppConstants.fontSizeS,
             color: isSelected ? Colors.white : AppColors.grey600,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal, // Medium
           ),
         ),
       ),
@@ -246,12 +246,12 @@ class _WalletPageState extends State<WalletPage> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.accent.withOpacity(0.1), // 黑色 10% 透明度
               borderRadius: BorderRadius.circular(AppConstants.radiusM),
             ),
             child: Icon(
               PhosphorIcons.shoppingCart(),
-              color: AppColors.primary,
+              color: AppColors.accent, // 黑色
               size: 20,
             ),
           ),

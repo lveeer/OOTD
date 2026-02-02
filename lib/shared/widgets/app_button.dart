@@ -4,14 +4,14 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 
-/// iOS HIG 风格按钮组件
-/// 支持触觉反馈、Liquid Glass 材质效果、流畅动画
+/// 极简白灰风格按钮组件
+/// 黑底白字 / 白底黑框 / 纯文字风格
 enum AppButtonType {
-  primary,
-  secondary,
-  outline,
-  text,
-  glass,
+  primary,   // 黑底白字
+  secondary, // 白底黑框
+  outline,   // 白底黑框（与 secondary 相同）
+  text,      // 纯文字
+  glass,     // 移除，改为 secondary
 }
 
 class AppButton extends StatelessWidget {
@@ -84,8 +84,8 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: _isEnabled ? _handlePress : null,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.accent, // 黑底
+        foregroundColor: Colors.white,     // 白字
         disabledBackgroundColor: brightness == Brightness.light
             ? AppColors.lightTertiaryFill
             : AppColors.darkTertiaryFill,
@@ -103,16 +103,16 @@ class AppButton extends StatelessWidget {
         ),
         textStyle: const TextStyle(
           fontSize: AppConstants.fontSizeL,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500, // Medium
           letterSpacing: -0.3,
         ),
       ).copyWith(
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return AppColors.primary.withOpacity(0.2);
+            return AppColors.lightLabel.withOpacity(0.1); // 黑色而非品牌色
           }
           if (states.contains(WidgetState.hovered)) {
-            return AppColors.primary.withOpacity(0.1);
+            return AppColors.lightLabel.withOpacity(0.05);
           }
           return null;
         }),
@@ -122,51 +122,13 @@ class AppButton extends StatelessWidget {
   }
 
   Widget _buildSecondaryButton(BuildContext context, Brightness brightness) {
-    return ElevatedButton(
-      onPressed: _isEnabled ? _handlePress : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.secondary,
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: brightness == Brightness.light
-            ? AppColors.lightTertiaryFill
-            : AppColors.darkTertiaryFill,
-        disabledForegroundColor: brightness == Brightness.light
-            ? AppColors.lightTertiaryLabel
-            : AppColors.darkTertiaryLabel,
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingL,
-          vertical: AppConstants.spacingM,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        textStyle: const TextStyle(
-          fontSize: AppConstants.fontSizeL,
-          fontWeight: FontWeight.w600,
-          letterSpacing: -0.3,
-        ),
-      ).copyWith(
-        overlayColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) {
-            return AppColors.secondary.withOpacity(0.2);
-          }
-          if (states.contains(WidgetState.hovered)) {
-            return AppColors.secondary.withOpacity(0.1);
-          }
-          return null;
-        }),
-      ),
-      child: _buildContent(),
-    );
-  }
-
-  Widget _buildOutlineButton(BuildContext context, Brightness brightness) {
     return OutlinedButton(
       onPressed: _isEnabled ? _handlePress : null,
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.primary,
+        backgroundColor: brightness == Brightness.light
+            ? AppColors.lightBackground // 白底
+            : AppColors.darkBackground,
+        foregroundColor: AppColors.labelColor(brightness), // 黑色/白色文字
         disabledForegroundColor: brightness == Brightness.light
             ? AppColors.lightTertiaryLabel
             : AppColors.darkTertiaryLabel,
@@ -178,33 +140,40 @@ class AppButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         side: BorderSide(
-          color: _isEnabled ? AppColors.primary : (brightness == Brightness.light
-              ? AppColors.lightTertiaryFill
-              : AppColors.darkTertiaryFill),
-          width: 1.5,
+          color: _isEnabled 
+              ? AppColors.labelColor(brightness) // 黑色/白色边框
+              : (brightness == Brightness.light
+                  ? AppColors.lightTertiaryFill
+                  : AppColors.darkTertiaryFill),
+          width: 1.0, // 1px 而非 1.5px
         ),
         textStyle: const TextStyle(
           fontSize: AppConstants.fontSizeL,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500, // Medium
           letterSpacing: -0.3,
         ),
       ).copyWith(
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return AppColors.primary.withOpacity(0.1);
+            return AppColors.labelColor(brightness).withOpacity(0.1);
           }
           return null;
         }),
       ),
-      child: _buildContent(),
+      child: _buildContent(AppColors.labelColor(brightness)),
     );
+  }
+
+  Widget _buildOutlineButton(BuildContext context, Brightness brightness) {
+    // Outline 与 Secondary 相同（白底黑框）
+    return _buildSecondaryButton(context, brightness);
   }
 
   Widget _buildTextButton(BuildContext context, Brightness brightness) {
     return TextButton(
       onPressed: _isEnabled ? _handlePress : null,
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.primary,
+        foregroundColor: AppColors.labelColor(brightness), // 黑色/白色
         disabledForegroundColor: brightness == Brightness.light
             ? AppColors.lightTertiaryLabel
             : AppColors.darkTertiaryLabel,
@@ -214,66 +183,24 @@ class AppButton extends StatelessWidget {
         ),
         textStyle: const TextStyle(
           fontSize: AppConstants.fontSizeM,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w400, // Regular
           letterSpacing: -0.2,
         ),
       ).copyWith(
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return AppColors.primary.withOpacity(0.1);
+            return AppColors.labelColor(brightness).withOpacity(0.1);
           }
           return null;
         }),
       ),
-      child: _buildContent(),
+      child: _buildContent(AppColors.labelColor(brightness)),
     );
   }
 
   Widget _buildGlassButton(BuildContext context, Brightness brightness) {
-    final glassColor = AppColors.glassColor(brightness);
-    final textColor = AppColors.labelColor(brightness);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: glassColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: brightness == Brightness.light
-              ? AppColors.glassBorderLight
-              : AppColors.glassBorderDark,
-          width: 1,
-        ),
-        boxShadow: AppColors.cardShadow(brightness),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _isEnabled ? _handlePress : null,
-          borderRadius: BorderRadius.circular(borderRadius),
-          splashColor: AppColors.primary.withOpacity(0.1),
-          highlightColor: AppColors.primary.withOpacity(0.05),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.spacingL,
-              vertical: AppConstants.spacingM,
-            ),
-            child: Center(
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  fontSize: AppConstants.fontSizeL,
-                  fontWeight: FontWeight.w600,
-                  color: _isEnabled ? textColor : (brightness == Brightness.light
-                      ? AppColors.lightTertiaryLabel
-                      : AppColors.darkTertiaryLabel),
-                  letterSpacing: -0.3,
-                ),
-                child: _buildContent(textColor),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    // Glass 改为 Secondary（白底黑框）
+    return _buildSecondaryButton(context, brightness);
   }
 
   Widget _buildContent([Color? textColor]) {

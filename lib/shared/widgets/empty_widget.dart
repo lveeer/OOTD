@@ -360,14 +360,14 @@ class PermissionRequestWidget extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.accent.withOpacity(0.1), // 黑色 10%
                 shape: BoxShape.circle,
-                boxShadow: AppColors.cardShadow(brightness),
+                boxShadow: [], // 移除阴影
               ),
               child: Icon(
                 PhosphorIcons.shieldCheck(),
                 size: 40,
-                color: AppColors.primary,
+                color: AppColors.accent, // 黑色
               ),
             ),
             const SizedBox(height: 24),

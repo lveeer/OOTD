@@ -190,7 +190,7 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: index == _currentImageIndex
-                              ? AppColors.primary
+                              ? AppColors.accent // 黑色
                               : AppColors.grey400,
                         ),
                       ),
@@ -223,19 +223,19 @@ class _ImageTagEditorState extends State<ImageTagEditor> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _selectedTag?.id == tag.id
-                  ? AppColors.primary
+                  ? AppColors.accent // 黑色
                   : Colors.white,
               border: Border.all(
-                color: AppColors.primary,
+                color: AppColors.accent, // 黑色
                 width: 2,
               ),
-              boxShadow: AppColors.cardShadow(Theme.of(context).brightness),
+              boxShadow: [], // 移除阴影
             ),
             child: Icon(
               PhosphorIcons.tag(),
               color: _selectedTag?.id == tag.id
                   ? Colors.white
-                  : AppColors.primary,
+                  : AppColors.accent, // 黑色
               size: 20,
             ),
           ),
