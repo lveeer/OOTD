@@ -48,7 +48,9 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('今日穿搭'),
         actions: [
           IconButton(
