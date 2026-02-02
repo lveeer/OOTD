@@ -235,7 +235,7 @@ class _MainScreenState extends State<MainScreen> {
                             icon: PhosphorIcons.chatCircle(),
                             activeIcon: PhosphorIcons.chatCircle(PhosphorIconsStyle.fill),
                             label: '消息',
-                            index: 3,
+                            index: 2,
                           ),
                         ),
                         Expanded(
@@ -244,7 +244,7 @@ class _MainScreenState extends State<MainScreen> {
                             icon: PhosphorIcons.user(),
                             activeIcon: PhosphorIcons.user(PhosphorIconsStyle.fill),
                             label: '我的',
-                            index: 4,
+                            index: 3,
                           ),
                         ),
                       ],
