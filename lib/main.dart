@@ -69,6 +69,95 @@ class _MainScreenState extends State<MainScreen> {
     const UserProfilePage(),
   ];
 
+  Widget _buildNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _currentIndex == index;
+    final brightness = Theme.of(context).brightness;
+    final selectedColor = brightness == Brightness.light
+        ? Colors.black
+        : Colors.white;
+    final unselectedColor = brightness == Brightness.light
+        ? const Color(0xFF8E8E93)
+        : const Color(0xFF8E8E93);
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            isSelected ? activeIcon : icon,
+            size: 24,
+            color: isSelected ? selectedColor : unselectedColor,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+              color: isSelected ? selectedColor : unselectedColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPostButton(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+
+    return SizedBox(
+      width: 86,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _currentIndex = 2;
+          });
+        },
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white : Colors.black,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.15)
+                      : Colors.black.withOpacity(0.15),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              PhosphorIcons.plus(),
+              color: isDark ? Colors.black : Colors.white,
+              size: 24,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -88,41 +177,82 @@ class _MainScreenState extends State<MainScreen> {
           index: _currentIndex,
           children: _pages,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(PhosphorIcons.house()),
-              activeIcon: Icon(PhosphorIcons.house(PhosphorIconsStyle.fill)),
-              label: '首页',
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : Colors.black,
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? const Color(0xFFE5E5E5)
+                    : const Color(0xFF2A2A2A),
+                width: 0.5,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(PhosphorIcons.magnifyingGlass()),
-              activeIcon: Icon(PhosphorIcons.magnifyingGlass(PhosphorIconsStyle.fill)),
-              label: '发现',
+          ),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 56 + MediaQuery.of(context).padding.bottom,
+              child: Row(
+                children: [
+                  // 左侧导航项：首页、发现
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildNavItem(
+                            context,
+                            icon: PhosphorIcons.house(),
+                            activeIcon: PhosphorIcons.house(PhosphorIconsStyle.fill),
+                            label: '首页',
+                            index: 0,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildNavItem(
+                            context,
+                            icon: PhosphorIcons.magnifyingGlass(),
+                            activeIcon: PhosphorIcons.magnifyingGlass(PhosphorIconsStyle.fill),
+                            label: '发现',
+                            index: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // 中间发布按钮（FAB 样式）
+                  _buildPostButton(context),
+                  // 右侧导航项：消息、我的
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildNavItem(
+                            context,
+                            icon: PhosphorIcons.chatCircle(),
+                            activeIcon: PhosphorIcons.chatCircle(PhosphorIconsStyle.fill),
+                            label: '消息',
+                            index: 3,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildNavItem(
+                            context,
+                            icon: PhosphorIcons.user(),
+                            activeIcon: PhosphorIcons.user(PhosphorIconsStyle.fill),
+                            label: '我的',
+                            index: 4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(PhosphorIcons.plusCircle()),
-              activeIcon: Icon(PhosphorIcons.plusCircle(PhosphorIconsStyle.fill)),
-              label: '发布',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(PhosphorIcons.chatCircle()),
-              activeIcon: Icon(PhosphorIcons.chatCircle(PhosphorIconsStyle.fill)),
-              label: '消息',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(PhosphorIcons.user()),
-              activeIcon: Icon(PhosphorIcons.user(PhosphorIconsStyle.fill)),
-              label: '我的',
-            ),
-          ],
+          ),
         ),
       ),
     );
