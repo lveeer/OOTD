@@ -28,6 +28,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _commentController = TextEditingController();
   bool _isExpanded = false;
+  dynamic _selectedTag;
 
   @override
   void initState() {
@@ -137,7 +138,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               // 标签叠加层
               ...state.post.tags
                   .where((tag) => tag.imageIndex == index)
-                  .map((tag) => _buildTag(tag, isDark)),
+                  .map((tag) => _buildTag(tag, isDark, state)),
               // 图片指示器
               if (state.post.images.length > 1)
                 Positioned(
@@ -169,14 +170,15 @@ class _PostDetailPageState extends State<PostDetailPage> {
     );
   }
 
-  Widget _buildTag(tag, bool isDark) {
+  Widget _buildTag(tag, bool isDark, PostDetailLoaded state) {
     return Positioned(
       left: tag.relativePosition.dx * MediaQuery.of(context).size.width,
       top: tag.relativePosition.dy *
           (MediaQuery.of(context).size.height * 0.6),
       child: GestureDetector(
         onTap: () {
-          // 点击标签滚动到商品列表
+          // 点击标签显示商品弹窗
+          _showProductDialog(tag, isDark);
         },
         child: Container(
           width: 24,
@@ -202,6 +204,76 @@ class _PostDetailPageState extends State<PostDetailPage> {
         ),
       ),
     );
+  }
+
+  void _showProductDialog(tag, bool isDark) {
+    setState(() {
+      _selectedTag = tag;
+    });
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSecondaryBackground : AppColors.lightSecondaryBackground,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 顶部拖动指示器
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // 商品卡片
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ProductCard(
+                    product: tag.product,
+                    showCommission: true,
+                  ),
+                ),
+                // 关闭按钮
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        _selectedTag = null;
+                      });
+                    },
+                    child: Text(
+                      '关闭',
+                      style: TextStyle(
+                        color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      setState(() {
+        _selectedTag = null;
+      });
+    });
   }
 
   Widget _buildUserInfo(PostDetailLoaded state, bool isDark) {
