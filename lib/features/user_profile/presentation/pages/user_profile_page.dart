@@ -54,14 +54,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _buildSliverAppBar() {
     return SliverAppBar(
-      expandedHeight: 200,
       pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            color: AppColors.accent, // 黑色背景
-          ),
-        ),
+      backgroundColor: Colors.white,
+      leading: IconButton(
+        icon: Icon(PhosphorIcons.arrowLeft()),
+        onPressed: () => Navigator.of(context).pop(),
       ),
       actions: [
         IconButton(
@@ -77,42 +74,54 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Widget _buildUserInfo() {
-    return Transform.translate(
-      offset: const Offset(0, -50),
-      child: Column(
+      return Column(
         children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: CachedNetworkImageProvider(_mockUser.avatar ?? ''),
-            backgroundColor: AppColors.grey100,
-          ),
-          const SizedBox(height: AppConstants.spacingM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _mockUser.nickname,
-                style: const TextStyle(
-                  fontSize: AppConstants.fontSizeXL,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(height: 20),
+          Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                  width: 4,
                 ),
-              ),
-              if (_mockUser.isVerified)
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Icon(
-                    PhosphorIcons.sealCheck(),
-                    color: AppColors.accent, // 黑色
-                    size: 20,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: CachedNetworkImageProvider(_mockUser.avatar ?? ''),
+                backgroundColor: AppColors.grey100,
+              ),
+            ),                  const SizedBox(height: AppConstants.spacingM),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _mockUser.nickname,
+                        style: const TextStyle(
+                          fontSize: AppConstants.fontSizeXL,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (_mockUser.isVerified)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Icon(
+                            PhosphorIcons.sealCheck(),
+                            color: AppColors.accent, // 黑色
+                            size: 20,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              );
+          }
   Widget _buildStats() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL),
