@@ -35,9 +35,6 @@ class OOTDApp extends StatelessWidget {
         BlocProvider(
           create: (context) => FeedBloc(),
         ),
-        BlocProvider(
-          create: (context) => PostEditorBloc(),
-        ),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
@@ -64,7 +61,6 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const FeedPage(),
     const DiscoverPage(),
-    const PostEditorPage(),
     const MessagePage(),
     const UserProfilePage(),
   ];
@@ -124,9 +120,14 @@ class _MainScreenState extends State<MainScreen> {
       width: 86,
       child: InkWell(
         onTap: () {
-          setState(() {
-            _currentIndex = 2;
-          });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => PostEditorBloc(),
+                child: const PostEditorPage(),
+              ),
+            ),
+          );
         },
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,

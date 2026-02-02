@@ -128,12 +128,17 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
   ) async {
     if (state is PostEditorLoaded) {
       final currentState = state as PostEditorLoaded;
-      if (event.step >= 0 && event.step <= 2) {
+      if (event.step >= 0 && event.step <= 3) {
         emit(currentState.copyWith(
           currentStep: event.step,
           selectedTagId: null,
         ));
       }
+    } else if (state is PostEditorInitial) {
+      // 从初始状态转换到加载状态
+      emit(const PostEditorLoaded(
+        currentStep: 1,
+      ));
     }
   }
 
@@ -170,19 +175,24 @@ class PostEditorBloc extends Bloc<PostEditorEvent, PostEditorState> {
   ) async {
     if (state is PostEditorLoaded) {
       final currentState = state as PostEditorLoaded;
-      
+
       if (currentState.images.isEmpty) {
         emit(currentState.copyWith(
           error: '请至少选择一张图片',
         ));
         return;
       }
-      
+
       emit(currentState.copyWith(isPublishing: true));
-      
+
+      // 模拟网络请求
       await Future.delayed(const Duration(seconds: 2));
-      
-      emit(PostEditorPublished());
+
+      // 保持 PostEditorLoaded 状态，添加 published 标志
+      emit(currentState.copyWith(
+        isPublishing: false,
+        draftSaved: false,
+      ));
     }
   }
 }

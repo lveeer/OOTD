@@ -139,12 +139,12 @@ class _PostEditorPageState extends State<PostEditorPage> {
               const SnackBar(content: Text('草稿已保存')),
             );
           }
-        }
-        if (state is PostEditorPublished) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('发布成功')),
-          );
+          if (state.published) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('发布成功')),
+            );
+          }
         }
       },
       builder: (context, state) {
@@ -241,7 +241,6 @@ class _PostEditorPageState extends State<PostEditorPage> {
                 ? _buildEmptyImageSelection()
                 : _buildImagePreview(state),
           ),
-          _buildImageActionButtons(state),
         ],
       ),
     );
@@ -391,28 +390,6 @@ class _PostEditorPageState extends State<PostEditorPage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildImageActionButtons(PostEditorLoaded state) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.secondaryBackgroundColor(Theme.of(context).brightness),
-        border: Border(
-          top: BorderSide(
-            color: AppColors.separatorColor(Theme.of(context).brightness),
-          ),
-        ),
-      ),
-      child: SafeArea(
-        child: AppButton(
-          text: '下一步',
-          onPressed: state.images.isNotEmpty ? _nextStep : null,
-          isFullWidth: true,
-          isDisabled: state.images.isEmpty,
-        ),
-      ),
     );
   }
 

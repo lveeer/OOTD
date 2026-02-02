@@ -18,6 +18,7 @@ class PostEditorLoaded extends PostEditorState {
   final bool isSaving;
   final bool isPublishing;
   final bool draftSaved;
+  final bool published;
   final String? error;
 
   const PostEditorLoaded({
@@ -29,6 +30,7 @@ class PostEditorLoaded extends PostEditorState {
     this.isSaving = false,
     this.isPublishing = false,
     this.draftSaved = false,
+    this.published = false,
     this.error,
   });
 
@@ -55,6 +57,7 @@ class PostEditorLoaded extends PostEditorState {
         isSaving,
         isPublishing,
         draftSaved,
+        published,
         error,
       ];
 
@@ -67,6 +70,7 @@ class PostEditorLoaded extends PostEditorState {
     bool? isSaving,
     bool? isPublishing,
     bool? draftSaved,
+    bool? published,
     String? error,
   }) {
     return PostEditorLoaded(
@@ -78,6 +82,7 @@ class PostEditorLoaded extends PostEditorState {
       isSaving: isSaving ?? this.isSaving,
       isPublishing: isPublishing ?? this.isPublishing,
       draftSaved: draftSaved ?? this.draftSaved,
+      published: published ?? this.published,
       error: error,
     );
   }
