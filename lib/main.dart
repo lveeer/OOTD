@@ -31,7 +31,8 @@ import 'features/post_detail/domain/usecases/collect_post.dart';
 import 'features/post_detail/domain/usecases/uncollect_post.dart';
 import 'features/post_detail/domain/usecases/follow_user.dart';
 import 'features/post_detail/domain/usecases/unfollow_user.dart';
-import 'features/user_profile/presentation/pages/user_profile_page.dart';
+import 'features/user_profile/presentation/pages/my_profile_page.dart';
+import 'features/user_profile/presentation/pages/user_detail_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -120,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
     const FeedPage(),
     const DiscoverPage(),
     const MessagePage(),
-    const UserProfilePage(),
+    const MyProfilePage(),
   ];
 
   Widget _buildNavItem(

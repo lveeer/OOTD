@@ -4,10 +4,12 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../../../../shared/models/user.dart';
 import '../blocs/discover_bloc.dart';
 import '../widgets/topic_card.dart';
 import '../widgets/user_card.dart';
 import '../widgets/trending_post_card.dart';
+import '../../../user_profile/presentation/pages/user_detail_page.dart';
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
@@ -330,7 +332,24 @@ class _DiscoverPageState extends State<DiscoverPage> {
             user: user,
             isFollowed: isFollowed,
             onTap: () {
-              // TODO: 跳转到用户详情页
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserDetailPage(
+                    user: User(
+                      id: user.id,
+                      nickname: user.nickname,
+                      avatar: user.avatar,
+                      bio: user.bio,
+                      followersCount: user.followersCount,
+                      followingCount: user.followingCount,
+                      postsCount: user.postsCount,
+                      isVerified: user.isVerified,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                  ),
+                ),
+              );
             },
             onFollowToggle: () {
               context

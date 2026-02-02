@@ -10,6 +10,7 @@ import '../blocs/post_detail_bloc.dart';
 import '../blocs/post_detail_event.dart';
 import '../blocs/post_detail_state.dart';
 import '../widgets/product_card.dart';
+import '../../../user_profile/presentation/pages/user_detail_page.dart';
 
 /// 帖子详情页
 class PostDetailPage extends StatefulWidget {
@@ -290,46 +291,64 @@ class _PostDetailPageState extends State<PostDetailPage> {
       ),
       child: Row(
         children: [
-          // 头像
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(state.post.author.avatar ?? ''),
+          // 头像 - 可点击跳转
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserDetailPage(user: state.post.author),
+                ),
+              );
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(state.post.author.avatar ?? ''),
+            ),
           ),
           const SizedBox(width: 10),
-          // 用户信息
+          // 用户信息 - 可点击跳转
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      state.post.author.nickname,
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeM,
-                        fontWeight: FontWeight.w500,
-                        color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                      ),
-                    ),
-                    if (state.post.author.isVerified) ...[
-                      const SizedBox(width: 4),
-                      Icon(
-                        PhosphorIcons.sealCheck(),
-                        size: 14,
-                        color: Colors.blue,
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${state.post.author.followersCount} 粉丝 · ${state.post.author.postsCount} 帖子',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXS,
-                    color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserDetailPage(user: state.post.author),
                   ),
-                ),
-              ],
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        state.post.author.nickname,
+                        style: TextStyle(
+                          fontSize: AppConstants.fontSizeM,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
+                        ),
+                      ),
+                      if (state.post.author.isVerified) ...[
+                        const SizedBox(width: 4),
+                        Icon(
+                          PhosphorIcons.sealCheck(),
+                          size: 14,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${state.post.author.followersCount} 粉丝 · ${state.post.author.postsCount} 帖子',
+                    style: TextStyle(
+                      fontSize: AppConstants.fontSizeXS,
+                      color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           // 关注按钮 - 小红书风格白色底色、红色字体、红色边框

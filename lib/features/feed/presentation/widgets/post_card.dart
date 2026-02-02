@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/post_entity.dart';
 import '../../../post_detail/presentation/blocs/post_detail_bloc.dart';
 import '../../../post_detail/presentation/pages/post_detail_page.dart';
+import '../../../user_profile/presentation/pages/user_detail_page.dart';
 
 /// 极简白灰风格帖子卡片
 /// 4-8px 圆角，无边框，扁平设计
@@ -133,32 +134,41 @@ class PostCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 用户名（灰色，弱化存在感）
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 8, // 缩小头像
-                        backgroundImage: post.author.avatar != null
-                            ? CachedNetworkImageProvider(post.author.avatar!)
-                            : null,
-                        backgroundColor: secondaryLabelColor.withOpacity(0.3),
-                        child: post.author.avatar == null
-                            ? Icon(PhosphorIcons.user(), size: 10, color: secondaryLabelColor)
-                            : null,
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          post.author.nickname,
-                          style: TextStyle(
-                            fontSize: 11, // 11-12px
-                            fontWeight: FontWeight.w400, // Regular
-                            color: secondaryLabelColor, // 灰色
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserDetailPage(user: post.author),
                         ),
-                      ),
-                    ],
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 8, // 缩小头像
+                          backgroundImage: post.author.avatar != null
+                              ? CachedNetworkImageProvider(post.author.avatar!)
+                              : null,
+                          backgroundColor: secondaryLabelColor.withOpacity(0.3),
+                          child: post.author.avatar == null
+                              ? Icon(PhosphorIcons.user(), size: 10, color: secondaryLabelColor)
+                              : null,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            post.author.nickname,
+                            style: TextStyle(
+                              fontSize: 11, // 11-12px
+                              fontWeight: FontWeight.w400, // Regular
+                              color: secondaryLabelColor, // 灰色
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 6),
                   // 穿搭描述（Medium 字重，最多2行）
