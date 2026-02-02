@@ -8,6 +8,8 @@ import 'features/auth/presentation/blocs/auth_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/feed/presentation/blocs/feed_bloc.dart';
 import 'features/feed/presentation/pages/feed_page.dart';
+import 'features/discover/presentation/blocs/discover_bloc.dart';
+import 'features/discover/presentation/pages/discover_page.dart';
 import 'features/post_editor/presentation/blocs/post_editor_bloc.dart';
 import 'features/post_editor/presentation/pages/post_editor_page.dart';
 import 'features/post_detail/data/datasources/post_detail_local_datasource.dart';
@@ -59,6 +61,9 @@ class OOTDApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => FeedBloc(),
+        ),
+        BlocProvider(
+          create: (context) => DiscoverBloc(),
         ),
       ],
       child: MaterialApp(
@@ -280,22 +285,6 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class DiscoverPage extends StatelessWidget {
-  const DiscoverPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('发现'),
-      ),
-      body: const Center(
-        child: Text('发现页面'),
       ),
     );
   }
