@@ -58,7 +58,7 @@ class ProductCard extends StatelessWidget {
             ),
             // 商品信息
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,13 +68,13 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeM,
-                      fontWeight: FontWeight.w400,
+                      fontSize: AppConstants.fontSizeS,
+                      fontWeight: FontWeight.w500,
                       color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                      height: 1.4,
+                      height: 1.3,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   // 价格行
                   Row(
                     children: [
@@ -84,7 +84,7 @@ class ProductCard extends StatelessWidget {
                           '¥${product.finalPrice.toStringAsFixed(2)}',
                           style: TextStyle(
                             color: isDark ? Colors.white : Colors.black,
-                            fontSize: AppConstants.fontSizeL,
+                            fontSize: AppConstants.fontSizeM,
                             fontWeight: FontWeight.w600,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -92,39 +92,39 @@ class ProductCard extends StatelessWidget {
                       ),
                       // 原价
                       if (product.originalPrice > product.finalPrice) ...[
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 4),
                         Flexible(
                           child: Text(
                             '¥${product.originalPrice.toStringAsFixed(2)}',
                             style: TextStyle(
                               color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
-                              fontSize: AppConstants.fontSizeS,
+                              fontSize: AppConstants.fontSizeXS,
                               decoration: TextDecoration.lineThrough,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 4),
                       // 佣金标签（仅达人自己可见）
                       if (showCommission && product.commission != null)
                         Flexible(
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
+                              horizontal: 4,
+                              vertical: 1,
                             ),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? AppColors.darkFill
                                   : AppColors.lightFill,
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(3),
                             ),
                             child: Text(
                               '赚¥${product.commission!.toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: isDark ? AppColors.darkLabel : AppColors.lightLabel,
-                                fontSize: AppConstants.fontSizeXS,
+                                fontSize: 10,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -132,38 +132,38 @@ class ProductCard extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   // 销量和评分
                   Row(
                     children: [
                       Icon(
                         Icons.shopping_bag_outlined,
-                        size: 12,
+                        size: 11,
                         color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 3),
                       Flexible(
                         child: Text(
                           '已售${_formatSalesCount(product.salesCount)}',
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeXS,
+                            fontSize: 10,
                             color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 6),
                       Icon(
                         Icons.star,
-                        size: 12,
+                        size: 11,
                         color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 3),
                       Flexible(
                         child: Text(
                           product.rating.toStringAsFixed(1),
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeXS,
+                            fontSize: 10,
                             color: isDark ? AppColors.darkTertiaryLabel : AppColors.lightTertiaryLabel,
                           ),
                           overflow: TextOverflow.ellipsis,
