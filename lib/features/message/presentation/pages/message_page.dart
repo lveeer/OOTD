@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/di/injection_container.dart' as di;
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/empty_widget.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../blocs/message_bloc.dart';
 import '../blocs/message_event.dart';
 import '../blocs/message_state.dart';
+import '../blocs/chat_bloc.dart';
 import '../widgets/conversation_item.dart';
 import '../widgets/notification_item.dart';
+import 'chat_page.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -207,7 +210,23 @@ class _MessagePageState extends State<MessagePage>
                             conversationId: conversations[index].id,
                           ),
                         );
-                    // TODO: 打开聊天详情页
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => ChatBloc(
+                            getMessages: di.getIt(),
+                            sendMessage: di.getIt(),
+                            markMessagesAsRead: di.getIt(),
+                          ),
+                          child: ChatPage(
+                            conversationId: conversations[index].id,
+                            otherUserId: conversations[index].otherUserId,
+                            otherUserName: conversations[index].otherUserName,
+                            otherUserAvatar: conversations[index].otherUserAvatar,
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 );
               },

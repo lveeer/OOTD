@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/empty_widget.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../../../../shared/widgets/glass_app_bar.dart';
 import '../blocs/feed_bloc.dart';
 import '../widgets/post_card.dart';
 
@@ -47,11 +49,11 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('今日穿搭'),
+      backgroundColor: theme.brightness == Brightness.light ? const Color(0xFFFAFAFA) : AppColors.darkBackground,
+      appBar: GlassAppBar(
+        title: '今日穿搭',
         actions: [
           IconButton(
             icon: Icon(PhosphorIcons.magnifyingGlass()),

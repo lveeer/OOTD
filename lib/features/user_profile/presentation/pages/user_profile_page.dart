@@ -55,7 +55,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _buildSliverAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : AppColors.backgroundDark,
       leading: IconButton(
         icon: Icon(PhosphorIcons.arrowLeft()),
         onPressed: () => Navigator.of(context).pop(),

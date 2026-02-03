@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../shared/models/message.dart';
 import '../../domain/entities/message_entity.dart';
@@ -6,6 +7,7 @@ import '../../domain/repositories/message_repository.dart';
 import '../datasources/message_local_datasource.dart';
 
 /// 消息仓库实现
+@Injectable(as: MessageRepository)
 class MessageRepositoryImpl implements MessageRepository {
   final MessageLocalDataSource localDataSource;
 
@@ -28,8 +30,11 @@ class MessageRepositoryImpl implements MessageRepository {
     String? lastMessageId,
   }) async {
     try {
-      // TODO: 实现获取消息列表逻辑
-      return const Right([]);
+      final messages = await localDataSource.getMessages(
+        conversationId: conversationId,
+        limit: limit,
+      );
+      return Right(messages);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -43,8 +48,13 @@ class MessageRepositoryImpl implements MessageRepository {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      // TODO: 实现发送消息逻辑
-      throw UnimplementedError();
+      final message = await localDataSource.sendMessage(
+        conversationId: conversationId,
+        content: content,
+        type: type,
+        metadata: metadata,
+      );
+      return Right(message);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }

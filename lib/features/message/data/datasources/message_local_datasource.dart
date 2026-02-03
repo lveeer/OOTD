@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import '../../domain/entities/message_entity.dart';
 import '../../../../shared/models/message.dart';
 
@@ -8,10 +9,30 @@ abstract class MessageLocalDataSource {
 
   /// 获取系统通知列表
   Future<List<NotificationEntity>> getNotifications();
+
+  /// 获取会话消息列表
+  Future<List<MessageEntity>> getMessages({
+    required String conversationId,
+    int limit = 20,
+  });
+
+  /// 发送消息
+  Future<MessageEntity> sendMessage({
+    required String conversationId,
+    required String content,
+    MessageType type = MessageType.text,
+    Map<String, dynamic>? metadata,
+  });
 }
 
 /// 消息本地数据源实现（Mock 数据）
+@Injectable(as: MessageLocalDataSource)
 class MessageLocalDataSourceImpl implements MessageLocalDataSource {
+  // 缓存已发送的消息
+  final Map<String, List<MessageEntity>> _messagesCache = {};
+
+  MessageLocalDataSourceImpl();
+
   @override
   Future<List<ConversationEntity>> getConversations() async {
     await Future.delayed(const Duration(milliseconds: 300));
@@ -67,6 +88,104 @@ class MessageLocalDataSourceImpl implements MessageLocalDataSource {
         ),
         unreadCount: 0,
         updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+    ];
+  }
+
+  @override
+  Future<List<MessageEntity>> getMessages({
+    required String conversationId,
+    int limit = 20,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // 如果缓存中有消息，返回缓存消息
+    if (_messagesCache.containsKey(conversationId)) {
+      return _messagesCache[conversationId]!;
+    }
+
+    // 返回模拟消息
+    final messages = _getMockMessages(conversationId);
+    _messagesCache[conversationId] = messages;
+    return messages;
+  }
+
+  @override
+  Future<MessageEntity> sendMessage({
+    required String conversationId,
+    required String content,
+    MessageType type = MessageType.text,
+    Map<String, dynamic>? metadata,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final message = MessageEntity(
+      id: 'msg_${DateTime.now().millisecondsSinceEpoch}',
+      conversationId: conversationId,
+      senderId: 'current_user',
+      content: content,
+      type: type,
+      createdAt: DateTime.now(),
+      isRead: false,
+      metadata: metadata,
+    );
+
+    // 添加到缓存
+    if (!_messagesCache.containsKey(conversationId)) {
+      _messagesCache[conversationId] = _getMockMessages(conversationId);
+    }
+    _messagesCache[conversationId]!.insert(0, message);
+
+    return message;
+  }
+
+  List<MessageEntity> _getMockMessages(String conversationId) {
+    final now = DateTime.now();
+    return [
+      MessageEntity(
+        id: 'msg_${conversationId}_1',
+        conversationId: conversationId,
+        senderId: 'user_2',
+        content: '嗨！很高兴认识你 😊',
+        type: MessageType.text,
+        createdAt: now.subtract(const Duration(days: 3)),
+        isRead: true,
+      ),
+      MessageEntity(
+        id: 'msg_${conversationId}_2',
+        conversationId: conversationId,
+        senderId: 'current_user',
+        content: '你好！我也很高兴认识你',
+        type: MessageType.text,
+        createdAt: now.subtract(const Duration(days: 3, hours: 23)),
+        isRead: true,
+      ),
+      MessageEntity(
+        id: 'msg_${conversationId}_3',
+        conversationId: conversationId,
+        senderId: 'user_2',
+        content: '看到你最近的穿搭分享，风格很棒！',
+        type: MessageType.text,
+        createdAt: now.subtract(const Duration(days: 2)),
+        isRead: true,
+      ),
+      MessageEntity(
+        id: 'msg_${conversationId}_4',
+        conversationId: conversationId,
+        senderId: 'current_user',
+        content: '谢谢你的喜欢！',
+        type: MessageType.text,
+        createdAt: now.subtract(const Duration(days: 2, hours: 1)),
+        isRead: true,
+      ),
+      MessageEntity(
+        id: 'msg_${conversationId}_5',
+        conversationId: conversationId,
+        senderId: 'user_2',
+        content: '今天的穿搭真好看！可以分享一下链接吗？',
+        type: MessageType.text,
+        createdAt: now.subtract(const Duration(minutes: 5)),
+        isRead: false,
       ),
     ];
   }
